@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#805AD5">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="연명의료안내">
+<title>연명의료결정제도 안내</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  :root {
+    --p: #805AD5; --p-light: #EDE9FE; --p-dark: #6D28D9;
+    --green: #059669; --green-light: #ECFDF5; --green-border: #A7F3D0;
+    --orange: #D97706;
+    --blue: #2563EB; --blue-light: #EFF6FF;
+    --red: #DC2626; --red-light: #FEF2F2; --red-border: #FECACA;
+    --yellow-light: #FFFBEB; --yellow-border: #FDE68A; --yellow-text: #92400E;
+    --bg: #F8FAFC;
+    --card: #FFFFFF;
+    --border: #E2E8F0;
+    --border-light: #F1F5F9;
+    --text: #1E293B;
+    --text-sub: #64748B;
+    --text-muted: #94A3B8;
+    --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-md: 0 4px 16px rgba(0,0,0,0.08);
+  }
+  html, body { height: 100%; font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: var(--text); }
+  button { font-family: 'Noto Sans KR', sans-serif; cursor: pointer; border: none; background: none; }
+  a { text-decoration: none; }
+
+  /* ── Layout ── */
+  #app { min-height: 100vh; display: flex; flex-direction: column; }
+  .screen { display: none; flex-direction: column; min-height: 100vh; }
+  .screen.active { display: flex; }
+
+  /* ── Header ── */
+  .header {
+    padding: 14px 18px; background: var(--card);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 12;
+    position: sticky; top: 0; z-index: 100;
+    box-shadow: var(--shadow);
+  }
+  .header-back { font-size: 20px; color: var(--text-sub); padding: 4px 8px; border-radius: 8px; }
+  .header-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+  .header-title { font-size: 15px; font-weight: 700; color: var(--text); }
+  .header-sub { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+
+  /* ── Tabs ── */
+  .tabs { display: flex; background: var(--card); border-bottom: 1px solid var(--border); overflow-x: auto; padding: 0 18px; gap: 0; }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tab-btn { padding: 12px 14px; font-size: 13.5px; font-weight: 500; color: var(--text-muted); border-bottom: 2.5px solid transparent; white-space: nowrap; transition: all 0.15s; }
+  .tab-btn.active { font-weight: 700; border-bottom-color: var(--p); color: var(--p); }
+
+  /* ── Content ── */
+  .content { flex: 1; padding: 18px; overflow-y: auto; }
+  .footer { padding: 12px 18px; text-align: center; font-size: 11px; color: var(--text-muted); border-top: 1px solid var(--border); background: var(--card); }
+
+  /* ── Cards ── */
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
+  .card + .card { margin-top: 10px; }
+
+  /* ── Role Selector ── */
+  #role-screen { align-items: center; justify-content: center; padding: 24px; }
+  .role-logo { width: 56px; height: 56px; border-radius: 16px; background: linear-gradient(135deg, #1a365d, #2B6CB0); display: flex; align-items: center; justify-content: center; font-size: 28px; color: #fff; box-shadow: 0 8px 32px rgba(43,108,176,0.25); margin-bottom: 20px; }
+  .role-title { font-size: 22px; font-weight: 800; color: var(--text); margin-bottom: 6px; text-align: center; letter-spacing: -0.5px; }
+  .role-desc { font-size: 14px; color: var(--text-sub); margin-bottom: 36px; text-align: center; line-height: 1.6; max-width: 340px; }
+  .role-list { display: flex; flex-direction: column; gap: 12px; width: 100%; max-width: 380px; }
+  .role-btn { display: flex; align-items: center; gap: 16px; padding: 18px 20px; background: var(--card); border: 1.5px solid var(--border); border-radius: 16px; text-align: left; transition: all 0.2s; }
+  .role-btn:hover, .role-btn:active { transform: translateY(-1px); }
+  .role-btn-icon { width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+  .role-btn-label { font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
+  .role-btn-sub { font-size: 13px; color: var(--text-sub); }
+  .role-btn-arrow { margin-left: auto; font-size: 18px; color: var(--text-muted); }
+  .role-notice { margin-top: 32px; font-size: 11px; color: var(--text-muted); text-align: center; line-height: 1.5; max-width: 340px; }
+
+  /* ── Accordion ── */
+  .accordion { display: flex; flex-direction: column; gap: 10px; }
+  .accordion-item { background: var(--card); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; transition: all 0.25s; }
+  .accordion-item.open { border-color: rgba(128,90,213,0.4); background: rgba(128,90,213,0.03); }
+  .accordion-header { width: 100%; padding: 16px 18px; display: flex; align-items: center; gap: 12px; text-align: left; }
+  .accordion-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .accordion-title { font-size: 15px; font-weight: 700; color: var(--text); }
+  .accordion-sub { font-size: 13px; color: var(--text-sub); margin-top: 2px; }
+  .accordion-arrow { margin-left: auto; font-size: 18px; transition: transform 0.2s; }
+  .accordion-item.open .accordion-arrow { transform: rotate(90deg); }
+  .accordion-body { padding: 0 18px 16px; display: none; }
+  .accordion-item.open .accordion-body { display: block; }
+  .detail-card { padding: 12px 14px; background: var(--card); border-radius: 10px; border: 1px solid var(--border-light); margin-bottom: 8px; }
+  .detail-label { font-size: 13px; font-weight: 700; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+  .detail-dot { display: inline-block; width: 6px; height: 6px; border-radius: 2px; }
+  .detail-text { font-size: 13.5px; line-height: 1.7; color: var(--text-sub); }
+
+  /* ── Docs Tab ── */
+  .doc-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; margin-bottom: 14px; }
+  .doc-header { padding: 14px 18px; border-bottom: 1px solid var(--border-light); }
+  .doc-name { font-size: 15px; font-weight: 700; color: var(--text); }
+  .doc-meta { font-size: 12.5px; color: var(--text-sub); margin-top: 4px; }
+  .doc-body { padding: 14px 18px; }
+  .doc-label { font-size: 12px; font-weight: 600; color: var(--text-sub); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .check-item { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border-light); cursor: pointer; }
+  .check-item:last-of-type { border-bottom: none; }
+  .checkbox { width: 22px; height: 22px; border-radius: 6px; border: 2px solid var(--border); background: transparent; display: flex; align-items: center; justify-content: center; transition: all 0.15s; flex-shrink: 0; }
+  .checkbox.checked { background: var(--p); border-color: var(--p); }
+  .checkbox-tick { color: #fff; font-size: 13px; font-weight: 800; display: none; }
+  .checkbox.checked .checkbox-tick { display: block; }
+  .check-label { font-size: 14px; color: var(--text); transition: all 0.15s; }
+  .check-label.checked { text-decoration: line-through; opacity: 0.5; }
+  .doc-note { margin-top: 12px; padding: 10px 12px; border-radius: 8px; font-size: 12.5px; color: var(--text-sub); line-height: 1.6; }
+
+  /* ── Terms Tab ── */
+  .search-wrap { position: relative; margin-bottom: 14px; }
+  .search-input { width: 100%; padding: 12px 16px 12px 40px; border: 1px solid var(--border); border-radius: 12px; font-size: 14px; font-family: 'Noto Sans KR', sans-serif; color: var(--text); background: var(--card); outline: none; }
+  .search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-size: 16px; opacity: 0.4; pointer-events: none; }
+  .term-card { padding: 14px 16px; background: var(--card); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 8px; }
+  .term-title { font-size: 14px; font-weight: 700; color: var(--blue); margin-bottom: 6px; }
+  .term-def { font-size: 13.5px; line-height: 1.7; color: var(--text-sub); }
+
+  /* ── FAQ Tab ── */
+  .faq-item { background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin-bottom: 8px; }
+  .faq-q { width: 100%; padding: 14px 16px; display: flex; align-items: flex-start; gap: 10px; text-align: left; }
+  .faq-q-mark { font-weight: 800; color: var(--blue); font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+  .faq-q-text { font-size: 14px; font-weight: 600; color: var(--text); line-height: 1.5; flex: 1; }
+  .faq-arrow { font-size: 16px; color: var(--text-muted); transition: transform 0.2s; flex-shrink: 0; }
+  .faq-item.open .faq-arrow { transform: rotate(180deg); }
+  .faq-a { display: none; padding: 0 16px 16px 40px; font-size: 13.5px; line-height: 1.7; color: var(--text-sub); }
+  .faq-item.open .faq-a { display: block; }
+  .faq-a-mark { font-weight: 700; color: var(--green); }
+
+  /* ── Workflow ── */
+  .progress-bar { display: flex; align-items: center; gap: 4px; margin-bottom: 16px; }
+  .prog-step { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; transition: all 0.25s; }
+  .prog-step.done { background: var(--p); color: #fff; }
+  .prog-step.active { background: var(--p); color: #fff; }
+  .prog-step.todo { background: var(--border); color: var(--text-muted); }
+  .prog-line { flex: 1; height: 2px; border-radius: 1px; transition: all 0.25s; }
+  .prog-line.done { background: var(--p); }
+  .prog-line.todo { background: var(--border); }
+
+  .breadcrumb { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; margin-bottom: 16px; }
+  .crumb { padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.15s; }
+  .crumb.current { background: var(--p); color: #fff; }
+  .crumb.past { background: var(--p-light); color: var(--p); }
+  .crumb-sep { color: var(--text-muted); font-size: 12px; }
+
+  .back-btn { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 8px; margin-bottom: 14px; background: var(--p-light); color: var(--p); font-size: 13px; font-weight: 600; }
+
+  /* Question node */
+  .wf-question { font-size: 17px; font-weight: 800; color: var(--text); margin-bottom: 6px; line-height: 1.4; }
+  .wf-desc { font-size: 13.5px; color: var(--text-sub); margin-bottom: 20px; line-height: 1.5; }
+  .wf-options { display: flex; flex-direction: column; gap: 10px; }
+  .wf-opt { display: flex; align-items: center; gap: 14px; padding: 16px 18px; background: var(--card); border: 1px solid var(--border); border-radius: 14px; text-align: left; transition: all 0.18s; }
+  .wf-opt:hover, .wf-opt:active { border-color: var(--p); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(128,90,213,0.12); }
+  .wf-opt-icon { width: 44px; height: 44px; border-radius: 12px; background: var(--p-light); display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+  .wf-opt-label { font-size: 15px; font-weight: 700; color: var(--text); }
+  .wf-opt-sub { font-size: 12.5px; color: var(--text-sub); margin-top: 2px; }
+  .wf-opt-arrow { margin-left: auto; font-size: 18px; color: var(--p); flex-shrink: 0; }
+
+  /* Confirm node */
+  .wf-section-title { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+  .wf-icon { font-size: 24px; }
+  .wf-title { font-size: 17px; font-weight: 800; color: var(--text); }
+  .checklist-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 16px 18px; margin-bottom: 12px; }
+  .checklist-label { font-size: 12px; font-weight: 700; color: var(--p); margin-bottom: 12px; letter-spacing: 0.5px; }
+  .cl-item { display: flex; align-items: flex-start; gap: 12px; padding: 10px 0; cursor: pointer; border-bottom: 1px solid var(--border-light); }
+  .cl-item:last-child { border-bottom: none; }
+  .cl-box { width: 22px; height: 22px; border-radius: 6px; border: 2px solid var(--border); background: transparent; display: flex; align-items: center; justify-content: center; transition: all 0.15s; flex-shrink: 0; margin-top: 1px; }
+  .cl-box.checked { background: var(--p); border-color: var(--p); }
+  .cl-tick { color: #fff; font-size: 13px; font-weight: 800; display: none; }
+  .cl-box.checked .cl-tick { display: block; }
+  .cl-text { font-size: 14px; line-height: 1.5; color: var(--text); transition: all 0.15s; }
+  .cl-text.checked { text-decoration: line-through; opacity: 0.55; }
+
+  .note-box { padding: 10px 14px; background: var(--p-light); border-radius: 10px; font-size: 12.5px; color: var(--text-sub); line-height: 1.6; margin-bottom: 12px; }
+  .warn-box { padding: 10px 14px; background: var(--red-light); border-radius: 10px; border: 1px solid var(--red-border); font-size: 12.5px; color: var(--red); line-height: 1.6; margin-bottom: 16px; font-weight: 600; }
+  .next-btn { width: 100%; padding: 14px 0; border-radius: 12px; font-size: 15px; font-weight: 700; font-family: 'Noto Sans KR', sans-serif; transition: all 0.15s; }
+  .next-btn.enabled { background: var(--p); color: #fff; }
+  .next-btn.disabled { background: var(--border); color: var(--text-muted); opacity: 0.6; cursor: not-allowed; }
+
+  /* Action node */
+  .action-list { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 16px 18px; margin-bottom: 12px; }
+  .action-item { display: flex; align-items: flex-start; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border-light); }
+  .action-item:last-child { border-bottom: none; }
+  .action-num { width: 24px; height: 24px; border-radius: 50%; background: var(--p-light); color: var(--p); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; flex-shrink: 0; }
+  .action-text { font-size: 14px; color: var(--text); line-height: 1.5; }
+  .tip-box { padding: 10px 14px; background: var(--yellow-light); border-radius: 10px; border: 1px solid var(--yellow-border); font-size: 12.5px; color: var(--yellow-text); line-height: 1.6; margin-bottom: 16px; }
+  .branch-q { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 12px; text-align: center; }
+  .branch-btns { display: flex; gap: 10px; }
+  .branch-btn { flex: 1; padding: 14px 0; border-radius: 12px; font-size: 15px; font-weight: 700; font-family: 'Noto Sans KR', sans-serif; color: #fff; }
+  .branch-yes { background: var(--green); }
+  .branch-no { background: var(--red); }
+
+  /* Result node */
+  .result-summary { font-size: 13.5px; color: var(--text-sub); line-height: 1.6; margin-bottom: 16px; padding: 0 2px; }
+  .steps-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 16px 18px; margin-bottom: 12px; }
+  .steps-label { font-size: 12px; font-weight: 700; color: var(--p); margin-bottom: 10px; letter-spacing: 0.5px; }
+  .step-item { display: flex; align-items: flex-start; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--border-light); }
+  .step-item:last-child { border-bottom: none; }
+  .step-num { width: 22px; height: 22px; border-radius: 50%; background: var(--p-light); color: var(--p); font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .step-text { font-size: 13.5px; color: var(--text); line-height: 1.5; }
+  .docs-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 14px 18px; margin-bottom: 12px; }
+  .docs-label { font-size: 12px; font-weight: 700; color: var(--p); margin-bottom: 8px; }
+  .docs-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .doc-tag { padding: 6px 12px; border-radius: 8px; font-size: 12.5px; background: var(--p-light); color: var(--p); font-weight: 600; }
+  .maintain-card { padding: 14px 18px; background: var(--green-light); border-radius: 14px; border: 1px solid var(--green-border); margin-bottom: 12px; }
+  .maintain-label { font-size: 12px; font-weight: 700; color: #065F46; margin-bottom: 8px; }
+  .maintain-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .maintain-tag { padding: 5px 10px; border-radius: 6px; font-size: 12px; background: #fff; border: 1px solid var(--green-border); color: #065F46; font-weight: 600; }
+  .reset-btn { width: 100%; padding: 14px 0; background: var(--p); color: #fff; border-radius: 12px; font-size: 15px; font-weight: 700; font-family: 'Noto Sans KR', sans-serif; margin-top: 4px; }
+
+  /* Info node */
+  .info-block { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; margin-bottom: 10px; }
+  .info-heading { font-size: 14px; font-weight: 700; color: var(--p); margin-bottom: 8px; }
+  .info-text { font-size: 13.5px; color: var(--text-sub); line-height: 1.7; margin-bottom: 10px; }
+  .info-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .info-tag { padding: 4px 10px; border-radius: 6px; font-size: 11.5px; background: var(--p-light); color: var(--p); font-weight: 600; }
+
+  .empty-msg { padding: 24px; text-align: center; color: var(--text-muted); font-size: 14px; }
+</style>
+</head>
+<body>
+<div id="app">
+
+<!-- ══════════════════════════════════ -->
+<!--  ROLE SELECT SCREEN                -->
+<!-- ══════════════════════════════════ -->
+<div id="role-screen" class="screen active">
+  <div class="role-logo">⚖</div>
+  <h1 class="role-title">연명의료결정제도 안내</h1>
+  <p class="role-desc">복잡한 절차를 역할별로 쉽게 안내합니다.<br>본인에게 해당하는 역할을 선택해 주세요.</p>
+  <div class="role-list">
+    <button class="role-btn" onclick="selectRole('patient')" style="border-color:#2B6CB020">
+      <div class="role-btn-icon" style="background:#2B6CB014">🧑</div>
+      <div><div class="role-btn-label">환자 본인</div><div class="role-btn-sub">직접 의사를 밝히고 싶은 분</div></div>
+      <div class="role-btn-arrow" style="color:#2B6CB0">›</div>
+    </button>
+    <button class="role-btn" onclick="selectRole('family')" style="border-color:#38A16920">
+      <div class="role-btn-icon" style="background:#38A16914">👨‍👩‍👧</div>
+      <div><div class="role-btn-label">환자 가족/보호자</div><div class="role-btn-sub">가족의 연명의료를 결정해야 하는 분</div></div>
+      <div class="role-btn-arrow" style="color:#38A169">›</div>
+    </button>
+    <button class="role-btn" onclick="selectRole('medical')" style="border-color:#805AD520">
+      <div class="role-btn-icon" style="background:#805AD514">⚕️</div>
+      <div><div class="role-btn-label">의료진</div><div class="role-btn-sub">제도 절차를 확인하려는 의료인</div></div>
+      <div class="role-btn-arrow" style="color:#805AD5">›</div>
+    </button>
+  </div>
+  <p class="role-notice">※ 본 앱은 정보 제공 목적이며 법적 효력을 갖는 유권해석의 근거가 되지 않습니다.<br>구체적인 사항은 국립연명의료관리기관(www.lst.go.kr) 또는 담당 의료기관에 문의하세요.</p>
+</div>
+
+<!-- ══════════════════════════════════ -->
+<!--  MAIN SCREEN                       -->
+<!-- ══════════════════════════════════ -->
+<div id="main-screen" class="screen">
+  <div class="header">
+    <button class="header-back" onclick="goBack()">←</button>
+    <div id="header-icon" class="header-icon"></div>
+    <div>
+      <div id="header-title" class="header-title"></div>
+      <div class="header-sub">연명의료결정제도</div>
+    </div>
+  </div>
+  <div class="tabs" id="tabs-bar"></div>
+  <div class="content" id="main-content"></div>
+  <div class="footer">국립연명의료관리기관 ☎ 1855-0075 · lst.go.kr</div>
+</div>
+
+</div>
+
+<script>
+// ════════════════════════════════════════
+//  DATA
+// ════════════════════════════════════════
+
+const ROLES = {
+  patient: { label: '환자 본인', icon: '🧑', color: '#2B6CB0' },
+  family:  { label: '환자 가족/보호자', icon: '👨‍👩‍👧', color: '#38A169' },
+  medical: { label: '의료진', icon: '⚕️', color: '#805AD5' },
+};
+
+const PATIENT_STEPS = [
+  { title: '1단계: 나의 상황 확인', sub: '어떤 서류를 작성할 수 있나요?', details: [
+    { label: '건강한 상태 (19세 이상)', text: '사전연명의료의향서를 작성할 수 있습니다. 향후 임종과정에 있는 환자가 되었을 때를 대비하여 미리 자신의 뜻을 문서로 남겨둘 수 있습니다.' },
+    { label: '말기환자 또는 임종과정 환자', text: '담당의사와 상의하여 연명의료계획서를 작성할 수 있습니다. 이미 사전연명의료의향서를 작성한 경우에도 별도로 작성 가능합니다.' },
+  ]},
+  { title: '2단계: 등록기관 방문', sub: '어디서, 어떻게 작성하나요?', details: [
+    { label: '사전연명의료의향서', text: '보건복지부가 지정한 등록기관(보건소, 건강생활지원센터, 지정 의료기관 등)을 방문하여 상담사의 설명을 듣고 작성합니다. 신분증 필수, 무료입니다.' },
+    { label: '연명의료계획서', text: '의료기관윤리위원회가 설치된 의료기관에서 담당의사가 작성합니다. 환자 본인이 직접 요청할 수 있습니다.' },
+  ]},
+  { title: '3단계: 등록 및 확인', sub: '작성 후에는 어떻게 되나요?', details: [
+    { label: '시스템 등록', text: '작성된 문서는 국립연명의료관리기관의 연명의료 정보처리시스템에 등록됩니다. 등록되어야 법적 효력이 인정됩니다.' },
+    { label: '조회 및 변경', text: '작성 15일 후 연명의료정보포털(www.lst.go.kr)에서 조회 가능합니다. 언제든지 변경하거나 철회할 수 있습니다.' },
+  ]},
+];
+
+const FAMILY_STEPS = [
+  { title: '1단계: 환자 의사 확인', sub: '환자의 뜻을 어떻게 확인하나요?', details: [
+    { label: '사전연명의료의향서가 있는 경우', text: '담당의사가 연명의료정보처리시스템을 통해 조회하여 의향서 기반으로 환자 의사를 확인합니다.' },
+    { label: '연명의료계획서가 있는 경우', text: '환자가 담당의사와 함께 작성해 둔 연명의료계획서로 환자 의사를 확인합니다.' },
+    { label: '아무 문서도 없는 경우', text: '가족 2인 이상이 환자의 평소 뜻을 동일하게 진술하거나, 환자가족 전원이 합의해야 합니다.' },
+  ]},
+  { title: '2단계: 가족 의사 확인 절차', sub: '가족은 어떤 절차를 거치나요?', details: [
+    { label: '가족 2인 이상 진술', text: '환자가족 2인 이상이 환자의 연명의료에 관한 의사를 동일하게 진술하면, 담당의사와 전문의 1인의 확인을 거쳐 환자의 의사로 간주합니다.' },
+    { label: '가족 전원 합의', text: '가족 전원이 합의하여 연명의료 중단을 결정할 수 있습니다. 이 경우에도 담당의사와 전문의 1인의 확인이 필요합니다.' },
+  ]},
+  { title: '3단계: 임종과정 판단', sub: '의학적 판단은 어떻게 이루어지나요?', details: [
+    { label: '담당의사 + 전문의 판단', text: "담당의사와 해당 분야 전문의 1인이 '회생 가능성이 없고, 치료에도 회복되지 않으며, 급속도로 악화되어 사망에 임박한 상태'인지 판단합니다." },
+    { label: '의료기관윤리위원회', text: '의료기관윤리위원회가 설치된 의료기관에서만 연명의료 중단 이행이 가능합니다.' },
+  ]},
+];
+
+const DOCS_DATA = {
+  patient: [
+    { name: '사전연명의료의향서', who: '19세 이상 건강한 성인', where: '보건복지부 지정 등록기관', need: ['신분증', '본인 직접 방문'], note: '무료, 상담 후 작성. 연명의료정보처리시스템 등록 시 법적 효력 발생.' },
+    { name: '연명의료계획서', who: '말기환자 또는 임종과정 환자', where: '의료기관윤리위원회 설치 의료기관', need: ['담당의사 작성', '환자 서명/기명날인/녹취/녹화'], note: '담당의사가 환자와 상의하여 작성. 환자가 요청 가능.' },
+  ],
+  family: [
+    { name: '환자가족 진술서 (2인 이상)', who: '환자가족 2인 이상', where: '의료기관', need: ['가족관계증명서', '신분증', '진술 내용 동일 확인'], note: '담당의사 + 전문의 1인이 확인해야 함.' },
+    { name: '환자가족 전원 합의서', who: '환자가족 전원', where: '의료기관', need: ['가족관계증명서', '전원 신분증', '전원 서명'], note: '미성년 가족의 경우 법정대리인이 대신 서명.' },
+  ],
+  medical: [
+    { name: '임종과정에 있는 환자 판단서', who: '담당의사 + 전문의 1인', where: '의료기관윤리위원회 설치 의료기관', need: ['의학적 판단 기록', '전문의 확인 서명'], note: '호스피스전문기관 이용 말기환자는 담당의사 1인 판단 가능.' },
+    { name: '연명의료중단등 결정 이행서', who: '담당의사', where: '의료기관', need: ['환자 의사 확인 기록', '이행 내용 기록'], note: '이행 결과를 의료기관윤리위원회 및 국립연명의료관리기관에 보고.' },
+    { name: '연명의료계획서', who: '담당의사 (환자 요청 시)', where: '의료기관윤리위원회 설치 의료기관', need: ['환자 상담 기록', '환자 서명/기명날인/녹취/녹화', '호스피스 이용 의향 확인'], note: '말기환자 또는 임종과정 환자 대상.' },
+    { name: '사전연명의료의향서 조회 기록', who: '담당의사', where: '의료기관', need: ['연명의료정보처리시스템 조회', '환자 본인 확인'], note: '작성 후 조회까지 15일 소요.' },
+  ],
+};
+
+const TERMS = [
+  { term: '연명의료', def: '임종과정에 있는 환자에게 시행하는 심폐소생술, 혈액투석, 항암제 투여, 인공호흡기 착용, 체외생명유지술(ECLS), 수혈, 혈압상승제 투여 등의 의학적 시술로서, 치료 효과 없이 임종까지의 기간만 연장하는 것입니다.' },
+  { term: '임종과정에 있는 환자', def: "담당의사와 전문의 1인으로부터 '회생 가능성이 없고, 치료에도 회복되지 않으며, 급속도로 증상이 악화되어 사망에 임박한 상태'라는 의학적 판단을 받은 환자입니다." },
+  { term: '말기환자', def: '암, 후천성면역결핍증, 만성폐쇄성호흡기질환, 만성간경화 등의 질환으로, 적극적인 치료에도 불구하고 근원적인 회복 가능성이 없고 점차 증상이 악화되어 수개월 이내 사망할 것으로 예상되는 환자입니다.' },
+  { term: '사전연명의료의향서', def: '19세 이상의 사람이 향후 임종과정에 있는 환자가 되었을 때를 대비하여, 연명의료 및 호스피스에 관한 자신의 의사를 미리 문서로 작성해 둔 것입니다.' },
+  { term: '연명의료계획서', def: '말기환자 또는 임종과정에 있는 환자가 담당의사와 상의하여, 연명의료 중단 결정 및 호스피스에 관한 사항을 기록한 문서입니다.' },
+  { term: '호스피스·완화의료', def: '말기환자 또는 임종과정에 있는 환자와 그 가족에게 통증 및 증상의 완화 등을 포함한 신체적, 심리사회적, 영적 영역에 대한 종합적인 돌봄을 제공하는 것입니다.' },
+  { term: '의료기관윤리위원회', def: '연명의료 중단 등의 결정 및 그 이행에 관한 업무를 수행하는 의료기관 내 위원회입니다. 이 위원회가 설치된 의료기관에서만 연명의료 중단이 가능합니다.' },
+  { term: '국립연명의료관리기관', def: '연명의료결정제도에 관한 사항을 관리하기 위해 보건복지부 산하에 설치된 기관으로, 연명의료 정보처리시스템 운영, 등록기관 관리 등의 업무를 수행합니다.' },
+];
+
+const FAQ = [
+  { q: '식물인간 상태나 뇌사 상태인 환자도 연명의료를 중단할 수 있나요?', a: '식물인간 상태나 뇌사 상태 자체가 연명의료 중단의 충분한 요건은 아닙니다. 담당의사와 전문의 1인이 임종과정에 있는 환자로 판단한 경우에만 환자 의사 확인을 거쳐 연명의료를 중단할 수 있습니다.' },
+  { q: '사전연명의료의향서를 작성한 후 마음이 바뀌면 어떻게 하나요?', a: '언제든지 변경하거나 철회할 수 있습니다. 등록기관을 방문하여 변경·철회를 요청하면, 등록기관은 지체 없이 의향서를 변경하거나 등록을 말소합니다.' },
+  { q: '연명의료를 중단해도 계속 받을 수 있는 치료가 있나요?', a: '네. 통증 완화를 위한 의료행위, 영양분 공급, 물 공급, 산소의 단순 공급은 연명의료가 아니므로 반드시 계속 제공됩니다.' },
+  { q: '가족 중 연락이 안 되는 사람이 있으면 전원 합의가 불가능한가요?', a: '행방불명 등의 사유로 확인이 불가능한 가족이 있는 경우, 나머지 가족 전원의 합의로 결정할 수 있습니다. 이 경우 의료기관윤리위원회의 확인이 필요합니다.' },
+  { q: '온라인으로 사전연명의료의향서를 작성할 수 있나요?', a: '반드시 보건복지부 지정 등록기관을 직접 방문하여, 상담사로부터 충분한 설명을 듣고 작성해야 합니다. 온라인 작성만으로는 법적 효력이 없습니다.' },
+  { q: '사전연명의료의향서 작성에 비용이 드나요?', a: '아니요. 사전연명의료의향서 작성과 등록에는 비용이 들지 않습니다. 본인 확인을 위한 신분증만 지참하면 됩니다.' },
+];
+
+// Workflow flow data
+const FLOW = {
+  start: { step:1, type:'question', question:'환자의 현재 상태를 판단해 주세요.', desc:'담당의사로서 환자의 의학적 상태에 대한 판단을 선택합니다.', options:[
+    { label:'임종과정', value:'dying', icon:'🔴', sub:'회생 불가, 급속 악화, 사망 임박' },
+    { label:'말기', value:'terminal', icon:'🟠', sub:'수개월 이내 사망 예상' },
+    { label:'해당 없음', value:'none', icon:'🟢', sub:'임종/말기 판단 이전' },
+  ]},
+  none: { step:2, type:'info', title:'임종/말기 판단 이전 단계', icon:'📋', blocks:[
+    { heading:'사전연명의료의향서 안내', text:'19세 이상 환자에게 사전연명의료의향서 제도를 안내할 수 있습니다. 건강한 상태에서도 미리 작성 가능하며, 보건복지부 지정 등록기관을 방문하도록 안내합니다.', tags:['사전연명의료의향서 등록기관 안내','제도 설명 리플렛'] },
+    { heading:'연명의료계획서 사전 상담', text:'향후 말기 진단 시 연명의료계획서를 작성할 수 있음을 환자에게 미리 설명할 수 있습니다. 조기 상담은 환자의 자기결정권 보장에 도움이 됩니다.', tags:['연명의료결정제도 안내문'] },
+    { heading:'호스피스·완화의료 안내', text:'말기 진단 시 호스피스·완화의료를 이용할 수 있음을 안내합니다. 입원형, 자문형, 가정형 호스피스 등 다양한 유형이 있습니다.', tags:['호스피스 이용 안내서'] },
+  ]},
+  dying: { step:2, type:'confirm', title:'임종과정 판단 확인', icon:'📌', checklist:['회생 가능성이 없음을 확인','치료에도 불구하고 회복되지 않음을 확인','급속도로 증상이 악화되어 사망에 임박한 상태','담당의사 본인이 판단','해당 분야 전문의 1인의 판단 확인'], note:'※ 호스피스전문기관에서 호스피스를 이용 중인 말기환자의 경우, 담당의사 1인의 판단으로 갈음 가능', req:'의료기관윤리위원회 설치 의료기관에서만 이행 가능', next:'check_docs' },
+  terminal: { step:2, type:'confirm', title:'말기환자 진단 확인', icon:'📌', checklist:['적극적 치료에도 근원적 회복 가능성 없음 확인','증상이 점차 악화됨을 확인','수개월 이내 사망할 것으로 예상','담당의사 및 전문의 1인의 진단'], note:'※ 말기환자 대상 질환: 암, 후천성면역결핍증, 만성폐쇄성호흡기질환, 만성간경화 등', req:'말기환자도 연명의료계획서 작성 요청 가능', next:'check_docs' },
+  check_docs: { step:3, type:'question', question:'환자의 사전 문서를 확인하세요.', desc:'연명의료정보처리시스템(www.lst.go.kr)에서 조회합니다.', options:[
+    { label:'사전연명의료의향서 있음', value:'has_ad', icon:'📄', sub:'환자가 미리 작성해 둔 의향서 확인' },
+    { label:'연명의료계획서 있음', value:'has_polst', icon:'📝', sub:'이전에 작성한 계획서 확인' },
+    { label:'문서 없음', value:'no_docs', icon:'❌', sub:'의향서·계획서 모두 없음' },
+  ]},
+  has_ad: { step:4, type:'action', title:'사전연명의료의향서 확인 절차', icon:'📄', actions:[
+    '연명의료정보처리시스템에서 의향서 내용 조회',
+    '담당의사가 환자에게 의향서 내용을 확인 (의사표현 가능 시)',
+    '의향서에 기재된 연명의료 중단 범위 확인',
+    '호스피스 이용 의향 확인',
+  ], tip:'본인 확인 시, 작성자가 본인임을 확인하고 내용 변경 의사가 없는지 재확인합니다.', branchQ:'환자가 현재 의사표현이 가능합니까?', yes:'ad_can_express', no:'ad_cannot_express' },
+  ad_can_express: { step:5, type:'result', title:'의사표현 가능 — 의향서 기반 진행', icon:'✅', summary:'환자가 직접 의향서 내용을 재확인하였으므로, 해당 내용에 따라 연명의료 유보/중단을 이행할 수 있습니다.', steps:['환자에게 의향서 내용을 설명하고, 변경 의사 여부를 확인','변경 없음 확인 시 → 의향서에 따라 이행','변경 원할 시 → 연명의료계획서를 새로 작성 (의향서보다 계획서가 우선)','이행 내용을 의료기관윤리위원회에 보고','국립연명의료관리기관에 등록'], docs:['임종과정에 있는 환자 판단서','연명의료중단등 결정 이행서'], maintain:['통증 완화 의료행위','영양분 공급','물 공급','산소의 단순 공급'] },
+  ad_cannot_express: { step:5, type:'result', title:'의사표현 불가 — 의향서 기반 진행', icon:'✅', summary:'의사표현을 할 수 없는 상태이나, 사전연명의료의향서가 등록되어 있으므로 해당 문서에 따라 이행합니다.', steps:['의향서가 본인에 의해 작성되었는지 확인','의향서 내용(연명의료 중단 범위, 호스피스 의향)에 따라 이행','담당의사가 의향서 확인 사실을 기록','이행 내용을 의료기관윤리위원회에 보고','국립연명의료관리기관에 등록'], docs:['임종과정에 있는 환자 판단서','연명의료중단등 결정 이행서'], maintain:['통증 완화 의료행위','영양분 공급','물 공급','산소의 단순 공급'] },
+  has_polst: { step:4, type:'result', title:'연명의료계획서 기반 진행', icon:'✅', summary:'환자가 담당의사와 함께 작성한 연명의료계획서가 있으므로, 해당 계획서에 따라 연명의료 유보/중단을 이행합니다.', steps:['연명의료계획서 내용(중단 범위, 호스피스 의향) 확인','환자가 의사표현 가능할 경우 변경 의사 확인','계획서에 따라 연명의료 유보 또는 중단 이행','이행 내용을 의료기관윤리위원회에 보고','국립연명의료관리기관에 등록'], docs:['임종과정에 있는 환자 판단서','연명의료중단등 결정 이행서'], maintain:['통증 완화 의료행위','영양분 공급','물 공급','산소의 단순 공급'], note:'※ 연명의료계획서는 사전연명의료의향서보다 우선합니다.' },
+  no_docs: { step:4, type:'question', question:'환자가 현재 의사표현이 가능합니까?', desc:'환자 본인이 연명의료에 대한 의사를 직접 표현할 수 있는 상태인지 판단합니다.', options:[
+    { label:'예, 가능합니다', value:'can_express', icon:'💬', sub:'환자가 직접 의사를 밝힐 수 있음' },
+    { label:'아니요, 불가능합니다', value:'cannot_express', icon:'🚫', sub:'의식 없음 또는 표현 불가' },
+  ]},
+  can_express: { step:5, type:'result', title:'환자 직접 의사표현 → 연명의료계획서 작성', icon:'✅', summary:'환자가 직접 의사를 표현할 수 있으므로, 담당의사가 환자와 상의하여 연명의료계획서를 작성합니다.', steps:['환자에게 연명의료결정제도를 충분히 설명','연명의료의 시행방법 및 중단 결정에 대해 상의','호스피스 이용 의향 확인','환자의 서명/기명날인/녹취/녹화로 의사 확인','연명의료계획서 작성 후 정보처리시스템에 등록','이행 시 의료기관윤리위원회에 보고'], docs:['연명의료계획서','임종과정에 있는 환자 판단서','연명의료중단등 결정 이행서'], maintain:['통증 완화 의료행위','영양분 공급','물 공급','산소의 단순 공급'] },
+  cannot_express: { step:5, type:'question', question:'환자가족을 통한 의사 확인 방법을 선택하세요.', desc:'환자가 의사표현이 불가하고 사전 문서도 없는 경우, 가족을 통해 환자의 의사를 확인합니다.', options:[
+    { label:'가족 2인 이상 진술', value:'family_2', icon:'👥', sub:'환자의 평소 뜻을 2인 이상이 동일하게 진술' },
+    { label:'가족 전원 합의', value:'family_all', icon:'👨‍👩‍👧‍👦', sub:'환자가족 전원이 연명의료 중단에 합의' },
+  ]},
+  family_2: { step:6, type:'result', title:'가족 2인 이상 동일 진술', icon:'✅', summary:'환자가족 2인 이상이 환자의 연명의료에 관한 의사를 동일하게 진술하고, 담당의사와 전문의 1인이 확인합니다.', steps:['환자가족 2인 이상이 환자의 평소 연명의료 의사를 동일하게 진술','담당의사가 진술 내용 확인','해당 분야 전문의 1인이 추가 확인','환자의 의사로 간주하여 연명의료 유보/중단 이행','이행 내용을 의료기관윤리위원회에 보고','국립연명의료관리기관에 등록'], docs:['환자가족 진술서','임종과정에 있는 환자 판단서','연명의료중단등 결정 이행서'], maintain:['통증 완화 의료행위','영양분 공급','물 공급','산소의 단순 공급'], note:'※ 가족관계증명서와 신분증이 필요합니다.' },
+  family_all: { step:6, type:'result', title:'가족 전원 합의', icon:'✅', summary:'환자가족 전원이 합의하여 연명의료 중단을 결정합니다. 담당의사와 전문의 1인이 확인합니다.', steps:['환자가족 전원이 연명의료 중단에 합의','미성년 가족은 법정대리인이 대신 서명','행방불명 가족이 있으면 나머지 전원 합의 + 윤리위원회 확인','담당의사 및 전문의 1인이 확인','연명의료 유보/중단 이행','이행 내용을 의료기관윤리위원회에 보고 및 등록'], docs:['환자가족 전원 합의서','가족관계증명서','임종과정에 있는 환자 판단서','연명의료중단등 결정 이행서'], maintain:['통증 완화 의료행위','영양분 공급','물 공급','산소의 단순 공급'], note:'※ 전원 합의서에는 모든 가족의 서명이 필요합니다.' },
+};
+
+const CRUMB_LABELS = { start:'환자 상태', dying:'임종과정', terminal:'말기', none:'해당없음', check_docs:'문서확인', has_ad:'의향서 있음', has_polst:'계획서 있음', no_docs:'문서없음', can_express:'표현가능', cannot_express:'표현불가', ad_can_express:'표현가능+의향서', ad_cannot_express:'표현불가+의향서', family_2:'가족2인진술', family_all:'가족전원합의' };
+
+// ════════════════════════════════════════
+//  STATE
+// ════════════════════════════════════════
+let currentRole = null;
+let currentTab = null;
+let wfHistory = ['start'];
+let wfChecked = {};
+let docChecked = {};
+let openAccordions = {};
+let openFaqs = {};
+
+// ════════════════════════════════════════
+//  NAVIGATION
+// ════════════════════════════════════════
+function selectRole(role) {
+  currentRole = role;
+  currentTab = role === 'medical' ? 'workflow' : 'guide';
+  wfHistory = ['start']; wfChecked = {}; docChecked = {};
+  document.getElementById('role-screen').classList.remove('active');
+  const ms = document.getElementById('main-screen');
+  ms.classList.add('active');
+
+  const r = ROLES[role];
+  document.getElementById('header-icon').textContent = r.icon;
+  document.getElementById('header-icon').style.background = r.color + '14';
+  document.getElementById('header-title').textContent = r.label + ' 안내';
+
+  renderTabs();
+  renderContent();
+}
+
+function goBack() {
+  document.getElementById('main-screen').classList.remove('active');
+  document.getElementById('role-screen').classList.add('active');
+  currentRole = null;
+}
+
+function switchTab(tab) {
+  currentTab = tab;
+  renderTabs();
+  renderContent();
+  document.getElementById('main-content').scrollTop = 0;
+}
+
+// ════════════════════════════════════════
+//  RENDER TABS
+// ════════════════════════════════════════
+function renderTabs() {
+  const tabs = currentRole === 'medical'
+    ? { workflow:'워크플로우', docs:'서류 체크리스트', terms:'용어 사전', faq:'자주 묻는 질문' }
+    : { guide:'절차 안내', docs:'서류 체크리스트', terms:'용어 사전', faq:'자주 묻는 질문' };
+  const color = ROLES[currentRole].color;
+  document.getElementById('tabs-bar').innerHTML = Object.entries(tabs).map(([k,v]) =>
+    `<button class="tab-btn ${currentTab===k?'active':''}" onclick="switchTab('${k}')" style="${currentTab===k?'color:'+color+';border-bottom-color:'+color:''}">${v}</button>`
+  ).join('');
+}
+
+// ════════════════════════════════════════
+//  RENDER CONTENT
+// ════════════════════════════════════════
+function renderContent() {
+  const el = document.getElementById('main-content');
+  if (currentTab === 'guide') el.innerHTML = renderGuide();
+  else if (currentTab === 'workflow') el.innerHTML = renderWorkflow();
+  else if (currentTab === 'docs') el.innerHTML = renderDocs();
+  else if (currentTab === 'terms') el.innerHTML = renderTerms();
+  else if (currentTab === 'faq') el.innerHTML = renderFaq();
+}
+
+// ── Guide ──
+function renderGuide() {
+  const steps = currentRole === 'patient' ? PATIENT_STEPS : FAMILY_STEPS;
+  const color = ROLES[currentRole].color;
+  return `<div class="accordion">${steps.map((s,i) => `
+    <div class="accordion-item ${openAccordions[i]?'open':''}" id="acc-${i}">
+      <button class="accordion-header" onclick="toggleAccordion(${i})">
+        <div class="accordion-dot" style="background:${color}"></div>
+        <div><div class="accordion-title">${s.title}</div><div class="accordion-sub">${s.sub}</div></div>
+        <div class="accordion-arrow" style="color:${color}">›</div>
+      </button>
+      <div class="accordion-body">${s.details.map(d=>`
+        <div class="detail-card">
+          <div class="detail-label" style="color:${color}">
+            <span class="detail-dot" style="background:${color}60"></span>${d.label}
+          </div>
+          <div class="detail-text">${d.text}</div>
+        </div>`).join('')}
+      </div>
+    </div>`).join('')}</div>`;
+}
+
+function toggleAccordion(i) {
+  openAccordions[i] = !openAccordions[i];
+  renderContent();
+}
+
+// ── Docs ──
+function renderDocs() {
+  const docs = DOCS_DATA[currentRole];
+  const color = ROLES[currentRole].color;
+  return docs.map((doc, di) => `
+    <div class="doc-card">
+      <div class="doc-header" style="background:${color}08">
+        <div class="doc-name">${doc.name}</div>
+        <div class="doc-meta">작성 대상: ${doc.who} · 장소: ${doc.where}</div>
+      </div>
+      <div class="doc-body">
+        <div class="doc-label">필요 항목</div>
+        ${doc.need.map((n,ni) => {
+          const k = `${di}-${ni}`, done = docChecked[k];
+          return `<div class="check-item" onclick="toggleDoc('${k}')">
+            <div class="checkbox ${done?'checked'}"><span class="checkbox-tick">✓</span></div>
+            <span class="check-label ${done?'checked'}">${n}</span>
+          </div>`;
+        }).join('')}
+        <div class="doc-note" style="background:${color}08">💡 ${doc.note}</div>
+      </div>
+    </div>`).join('');
+}
+
+function toggleDoc(k) {
+  docChecked[k] = !docChecked[k];
+  renderContent();
+}
+
+// ── Terms ──
+function renderTerms() {
+  return `<div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input class="search-input" type="text" placeholder="용어 검색..." oninput="filterTerms(this.value)" id="term-search">
+  </div>
+  <div id="terms-list">${TERMS.map(t=>`
+    <div class="term-card">
+      <div class="term-title">${t.term}</div>
+      <div class="term-def">${t.def}</div>
+    </div>`).join('')}</div>`;
+}
+
+function filterTerms(q) {
+  const filtered = TERMS.filter(t => t.term.includes(q) || t.def.includes(q));
+  document.getElementById('terms-list').innerHTML = filtered.length
+    ? filtered.map(t=>`<div class="term-card"><div class="term-title">${t.term}</div><div class="term-def">${t.def}</div></div>`).join('')
+    : '<div class="empty-msg">검색 결과가 없습니다.</div>';
+}
+
+// ── FAQ ──
+function renderFaq() {
+  return FAQ.map((f,i) => `
+    <div class="faq-item ${openFaqs[i]?'open':''}" id="faq-${i}">
+      <button class="faq-q" onclick="toggleFaq(${i})">
+        <span class="faq-q-mark">Q.</span>
+        <span class="faq-q-text">${f.q}</span>
+        <span class="faq-arrow">⌄</span>
+      </button>
+      <div class="faq-a"><span class="faq-a-mark">A. </span>${f.a}</div>
+    </div>`).join('');
+}
+
+function toggleFaq(i) {
+  openFaqs[i] = !openFaqs[i];
+  renderContent();
+}
+
+// ════════════════════════════════════════
+//  WORKFLOW
+// ════════════════════════════════════════
+function renderWorkflow() {
+  const nodeId = wfHistory[wfHistory.length - 1];
+  const node = FLOW[nodeId];
+  const step = node.step;
+
+  // Progress
+  const prog = Array.from({length:6},(_,i)=>{
+    const s=i+1, done=s<step, active=s===step;
+    return `<div class="prog-step ${done?'done':active?'active':'todo'}">${done?'✓':s}</div>${i<5?`<div class="prog-line ${done?'done':'todo'}"></div>`:''}`;
+  }).join('');
+
+  // Breadcrumbs
+  const crumbs = wfHistory.map((id,i) => {
+    const isCurrent = i === wfHistory.length - 1;
+    return `${i>0?'<span class="crumb-sep">→</span>':''}
+      <span class="crumb ${isCurrent?'current':'past'}" onclick="wfJumpTo(${i})">${CRUMB_LABELS[id]||id}</span>`;
+  }).join('');
+
+  const backBtn = wfHistory.length > 1
+    ? `<button class="back-btn" onclick="wfBack()">← 이전 단계</button>` : '';
+
+  let body = '';
+  if (node.type === 'question') body = renderWfQuestion(node);
+  else if (node.type === 'confirm') body = renderWfConfirm(node, nodeId);
+  else if (node.type === 'info') body = renderWfInfo(node);
+  else if (node.type === 'action') body = renderWfAction(node);
+  else if (node.type === 'result') body = renderWfResult(node);
+
+  return `
+    <div class="progress-bar">${prog}</div>
+    <div class="breadcrumb">${crumbs}</div>
+    ${backBtn}
+    ${body}`;
+}
+
+function renderWfQuestion(node) {
+  return `
+    <div class="wf-question">${node.question}</div>
+    <div class="wf-desc">${node.desc}</div>
+    <div class="wf-options">${node.options.map(o=>`
+      <button class="wf-opt" onclick="wfGoto('${o.value}')">
+        <div class="wf-opt-icon">${o.icon}</div>
+        <div><div class="wf-opt-label">${o.label}</div><div class="wf-opt-sub">${o.sub}</div></div>
+        <div class="wf-opt-arrow">›</div>
+      </button>`).join('')}
+    </div>`;
+}
+
+function renderWfConfirm(node, nodeId) {
+  const allChecked = node.checklist.every((_,i) => wfChecked[`${nodeId}-${i}`]);
+  const items = node.checklist.map((item,i) => {
+    const k=`${nodeId}-${i}`, done=wfChecked[k];
+    return `<div class="cl-item" onclick="toggleCl('${k}')">
+      <div class="cl-box ${done?'checked'}"><span class="cl-tick">✓</span></div>
+      <span class="cl-text ${done?'checked'}">${item}</span>
+    </div>`;
+  }).join('');
+  return `
+    <div class="wf-section-title"><span class="wf-icon">${node.icon}</span><span class="wf-title">${node.title}</span></div>
+    <div class="checklist-card">
+      <div class="checklist-label">확인 항목 (모두 체크해 주세요)</div>
+      ${items}
+    </div>
+    ${node.note?`<div class="note-box">${node.note}</div>`:''}
+    ${node.req?`<div class="warn-box">⚠ ${node.req}</div>`:''}
+    <button class="next-btn ${allChecked?'enabled':'disabled'}" onclick="${allChecked?`wfGoto('${node.next}')`:''}">${allChecked?'다음 단계로 →':'모든 항목을 확인해 주세요'}</button>`;
+}
+
+function renderWfInfo(node) {
+  return `
+    <div class="wf-section-title"><span class="wf-icon">${node.icon}</span><span class="wf-title">${node.title}</span></div>
+    ${node.blocks.map(b=>`
+      <div class="info-block">
+        <div class="info-heading">${b.heading}</div>
+        <div class="info-text">${b.text}</div>
+        <div class="info-tags">${b.tags.map(t=>`<span class="info-tag">📎 ${t}</span>`).join('')}</div>
+      </div>`).join('')}
+    <button class="reset-btn" onclick="wfReset()">↩ 처음으로 돌아가기</button>`;
+}
+
+function renderWfAction(node) {
+  return `
+    <div class="wf-section-title"><span class="wf-icon">${node.icon}</span><span class="wf-title">${node.title}</span></div>
+    <div class="action-list">${node.actions.map((a,i)=>`
+      <div class="action-item">
+        <div class="action-num">${i+1}</div>
+        <div class="action-text">${a}</div>
+      </div>`).join('')}
+    </div>
+    ${node.tip?`<div class="tip-box">💡 ${node.tip}</div>`:''}
+    <div class="branch-q">${node.branchQ}</div>
+    <div class="branch-btns">
+      <button class="branch-btn branch-yes" onclick="wfGoto('${node.yes}')">예, 가능</button>
+      <button class="branch-btn branch-no" onclick="wfGoto('${node.no}')">아니요, 불가</button>
+    </div>`;
+}
+
+function renderWfResult(node) {
+  return `
+    <div class="wf-section-title"><span class="wf-icon" style="font-size:28px">${node.icon}</span><span class="wf-title">${node.title}</span></div>
+    <div class="result-summary">${node.summary}</div>
+    <div class="steps-card">
+      <div class="steps-label">이행 절차</div>
+      ${node.steps.map((s,i)=>`<div class="step-item"><div class="step-num">${i+1}</div><div class="step-text">${s}</div></div>`).join('')}
+    </div>
+    <div class="docs-card">
+      <div class="docs-label">필요 서류</div>
+      <div class="docs-tags">${node.docs.map(d=>`<span class="doc-tag">📎 ${d}</span>`).join('')}</div>
+    </div>
+    <div class="maintain-card">
+      <div class="maintain-label">⚠ 반드시 유지해야 할 의료행위</div>
+      <div class="maintain-tags">${node.maintain.map(m=>`<span class="maintain-tag">${m}</span>`).join('')}</div>
+    </div>
+    ${node.note?`<div class="note-box">${node.note}</div>`:''}
+    <button class="reset-btn" onclick="wfReset()">↩ 새로운 케이스 시작</button>`;
+}
+
+// Workflow controls
+function wfGoto(id) { wfHistory.push(id); wfChecked=Object.assign({},wfChecked); renderContent(); document.getElementById('main-content').scrollTop=0; }
+function wfBack() { if(wfHistory.length>1){ wfHistory.pop(); renderContent(); document.getElementById('main-content').scrollTop=0; } }
+function wfJumpTo(i) { if(i<wfHistory.length-1){ wfHistory=wfHistory.slice(0,i+1); renderContent(); } }
+function wfReset() { wfHistory=['start']; wfChecked={}; renderContent(); document.getElementById('main-content').scrollTop=0; }
+function toggleCl(k) { wfChecked[k]=!wfChecked[k]; renderContent(); }
+</script>
+</body>
+</html>
