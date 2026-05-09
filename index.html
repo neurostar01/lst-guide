@@ -56,6 +56,44 @@
   .role-btn-arrow { margin-left: auto; font-size: 18px; }
   .role-notice { margin-top: 32px; font-size: 11px; color: var(--text-muted); text-align: center; line-height: 1.5; max-width: 340px; }
 
+  /* Forms shortcut button on role select screen */
+  .forms-shortcut { width: 100%; max-width: 380px; margin-top: 16px; padding: 14px 18px; display: flex; align-items: center; gap: 12px; background: linear-gradient(135deg, #FAFAFC, #F1F5F9); border: 1.5px dashed var(--border); border-radius: 14px; text-align: left; transition: all 0.2s; }
+  .forms-shortcut:active { transform: translateY(-1px); border-color: var(--p); background: var(--p-light); }
+  .forms-shortcut-icon { width: 36px; height: 36px; border-radius: 10px; background: #fff; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; border: 1px solid var(--border); }
+  .forms-shortcut-label { font-size: 14px; font-weight: 700; color: var(--text); }
+  .forms-shortcut-sub { font-size: 11px; color: var(--text-sub); margin-left: 0; }
+  .forms-shortcut-arrow { margin-left: auto; font-size: 18px; color: var(--text-muted); }
+  .forms-shortcut > div { display: flex; flex-direction: column; gap: 2px; flex: 1; }
+
+  /* Forms tab content */
+  .form-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; margin-bottom: 12px; }
+  .form-card-header { padding: 14px 16px; display: flex; align-items: center; gap: 12px; cursor: pointer; transition: background 0.15s; }
+  .form-card-header:active { background: var(--p-light); }
+  .form-code-badge { font-size: 11px; padding: 3px 8px; border-radius: 5px; background: var(--p-light); color: var(--p); font-weight: 700; flex-shrink: 0; }
+  .form-card-body { flex: 1; min-width: 0; }
+  .form-card-name { font-size: 14.5px; font-weight: 700; color: var(--text); margin-bottom: 3px; }
+  .form-card-desc { font-size: 12.5px; color: var(--text-sub); line-height: 1.5; }
+  .form-card-arrow { font-size: 18px; color: var(--p); flex-shrink: 0; }
+
+  /* Form detail / preview modal */
+  .form-modal-bg { position: fixed; inset: 0; background: rgba(15,23,42,0.6); display: none; align-items: flex-start; justify-content: center; z-index: 200; padding: 16px; overflow-y: auto; }
+  .form-modal-bg.open { display: flex; }
+  .form-modal { background: var(--card); border-radius: 14px; max-width: 540px; width: 100%; box-shadow: 0 20px 60px rgba(0,0,0,0.3); overflow: hidden; margin-top: 20px; margin-bottom: 20px; }
+  .form-modal-header { padding: 14px 18px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; position: sticky; top: 0; background: var(--card); z-index: 1; }
+  .form-modal-title { flex: 1; font-size: 15px; font-weight: 700; }
+  .form-modal-close { font-size: 22px; color: var(--text-sub); padding: 0 8px; cursor: pointer; }
+  .form-modal-body { padding: 16px 18px; }
+  .form-info { margin-bottom: 14px; padding: 12px 14px; background: var(--bg); border-radius: 10px; font-size: 12.5px; line-height: 1.6; color: var(--text-sub); }
+  .form-info b { color: var(--text); font-weight: 700; }
+  .form-preview-wrap { background: var(--bg); border-radius: 10px; padding: 8px; text-align: center; border: 1px solid var(--border); }
+  .form-preview-img { max-width: 100%; height: auto; display: block; margin: 0 auto; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+  .form-preview-note { font-size: 11px; color: var(--text-muted); margin-top: 8px; }
+  .form-actions { display: flex; gap: 8px; margin-top: 14px; }
+  .form-action-btn { flex: 1; padding: 12px 0; border-radius: 10px; font-size: 14px; font-weight: 700; font-family: inherit; display: flex; align-items: center; justify-content: center; gap: 6px; text-decoration: none; transition: all 0.15s; }
+  .form-action-pdf { background: var(--p); color: #fff; }
+  .form-action-pdf:active { background: var(--p-dark, #6D28D9); }
+  .form-action-view { background: var(--blue-light); color: var(--blue); }
+
   /* Docs */
   .doc-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; margin-bottom: 14px; }
   .doc-header { padding: 14px 18px; border-bottom: 1px solid var(--border-light); }
@@ -232,6 +270,16 @@
       <div class="role-btn-arrow" style="color:#805AD5">›</div>
     </button>
   </div>
+
+  <button class="forms-shortcut" id="forms-shortcut-btn">
+    <span class="forms-shortcut-icon">📄</span>
+    <div>
+      <span class="forms-shortcut-label">서식 자료실</span>
+      <span class="forms-shortcut-sub">7종 법정서식 미리보기 및 다운로드</span>
+    </div>
+    <span class="forms-shortcut-arrow">›</span>
+  </button>
+
   <p class="role-notice">※ 본 앱은 정보 제공 목적이며 법적 효력을 갖는 유권해석의 근거가 되지 않습니다.<br>구체적인 사항은 국립연명의료관리기관(www.lst.go.kr) 또는 담당 의료기관에 문의하세요.</p>
 </div>
 
@@ -249,6 +297,18 @@
   <div class="footer">국립연명의료관리기관 ☎ 1855-0075 · lst.go.kr</div>
 </div>
 
+</div>
+
+<!-- Form preview modal -->
+<div class="form-modal-bg" id="form-modal">
+  <div class="form-modal">
+    <div class="form-modal-header">
+      <span style="font-size:18px">📄</span>
+      <div class="form-modal-title" id="form-modal-title">서식 미리보기</div>
+      <span class="form-modal-close" id="form-modal-close">×</span>
+    </div>
+    <div class="form-modal-body" id="form-modal-body"></div>
+  </div>
 </div>
 
 <script>
@@ -310,9 +370,87 @@ var FAQ = [
   { q: '식물인간 상태나 뇌사 상태인 환자도 연명의료를 중단할 수 있나요?', a: '식물인간 상태나 뇌사 상태 자체가 연명의료 중단의 충분한 요건은 아닙니다. 담당의사와 전문의 1인이 임종과정에 있는 환자로 판단한 경우에만 환자 의사 확인을 거쳐 연명의료를 중단할 수 있습니다.' },
   { q: '사전연명의료의향서를 작성한 후 마음이 바뀌면 어떻게 하나요?', a: '언제든지 변경하거나 철회할 수 있습니다. 등록기관을 방문하여 변경·철회를 요청하면, 등록기관은 지체 없이 의향서를 변경하거나 등록을 말소합니다.' },
   { q: '연명의료를 중단해도 계속 받을 수 있는 치료가 있나요?', a: '네. 통증 완화를 위한 의료행위, 영양분 공급, 물 공급, 산소의 단순 공급은 연명의료가 아니므로 반드시 계속 제공됩니다.' },
-  { q: '가족 중 연락이 안 되는 사람이 있으면 전원 합의가 불가능한가요?', a: '행방불명 등의 사유로 확인이 불가능한 가족이 있는 경우, 나머지 가족 전원의 합의로 결정할 수 있습니다. 이 경우 의료기관윤리위원회의 확인이 필요합니다.' },
+  { q: '가족 중 연락이 안 되는 사람이 있으면 전원 합의가 불가능한가요?', a: '행방불명 등의 사유로 확인이 불가능한 가족이 있는 경우, 나머지 가족 전원의 합의로 결정할 수 있습니다. 단, 이 경우 별도의 법적 절차 확인이 필요할 수 있고 의료기관윤리위원회의 확인이 필요합니다.' },
   { q: '온라인으로 사전연명의료의향서를 작성할 수 있나요?', a: '반드시 보건복지부 지정 등록기관을 직접 방문하여, 상담사로부터 충분한 설명을 듣고 작성해야 합니다. 온라인 작성만으로는 법적 효력이 없습니다.' },
   { q: '사전연명의료의향서 작성에 비용이 드나요?', a: '아니요. 사전연명의료의향서 작성과 등록에는 비용이 들지 않습니다. 본인 확인을 위한 신분증만 지참하면 됩니다.' }
+];
+
+// ════════════════════════════════════════
+//  서식 자료실 (FORMS)
+// ════════════════════════════════════════
+// 파일 경로는 같은 도메인의 forms/ 폴더에 PDF, forms/previews/ 에 미리보기 이미지가 있다고 가정.
+// GitHub/Vercel 배포 시 index.html과 같은 위치에 forms 폴더를 두면 됩니다.
+var FORMS = [
+  {
+    id: 'form_01',
+    code: '별지 제6호',
+    name: '사전연명의료의향서',
+    desc: '19세 이상이 향후 임종과정에 있는 환자가 되었을 때를 대비해 미리 작성하는 서식입니다.',
+    audience: '환자 본인 (19세 이상 누구나)',
+    where: '보건복지부 지정 등록기관',
+    pdf: 'forms/01_사전연명의료의향서.pdf',
+    preview: 'forms/previews/01_사전연명의료의향서_p-1.jpg'
+  },
+  {
+    id: 'form_02',
+    code: '별지 제1호',
+    name: '연명의료계획서',
+    desc: '말기환자 또는 임종과정에 있는 환자가 담당의사와 상의하여 작성하는 계획서입니다.',
+    audience: '말기환자/임종과정 환자 + 담당의사',
+    where: '의료기관윤리위원회 설치 의료기관',
+    pdf: 'forms/02_연명의료계획서.pdf',
+    preview: 'forms/previews/02_연명의료계획서_p-1.jpg'
+  },
+  {
+    id: 'form_03',
+    code: '별지 제9호',
+    name: '임종과정에 있는 환자 판단서',
+    desc: '담당의사와 해당 분야 전문의 1인이 환자가 임종과정에 있음을 의학적으로 판단하는 서식입니다.',
+    audience: '담당의사 + 전문의 1인',
+    where: '의료기관윤리위원회 설치 의료기관',
+    pdf: 'forms/03_임종과정에_있는_환자_판단서.pdf',
+    preview: 'forms/previews/03_임종과정에_있는_환자_판단서_p-1.jpg'
+  },
+  {
+    id: 'form_04',
+    code: '별지 제10호',
+    name: '환자의사 확인서 (사전연명의료의향서)',
+    desc: '의사표현이 불가능한 환자에 대해 사전연명의료의향서의 효력을 담당의사 + 전문의 1인이 의료적으로 확인하는 서식입니다.',
+    audience: '담당의사 + 전문의 1인',
+    where: '의료기관윤리위원회 설치 의료기관',
+    pdf: 'forms/04_환자의사_확인서_사전연명의료의향서.pdf',
+    preview: 'forms/previews/04_환자의사_확인서_사전연명의료의향서_p-1.jpg'
+  },
+  {
+    id: 'form_05',
+    code: '별지 제11호',
+    name: '환자의사 확인서 (환자가족 진술)',
+    desc: '환자가 의사표현이 불가하고 사전 문서가 없는 경우, 가족 2인 이상이 환자의 평소 의사를 동일하게 진술한 내용을 확인하는 서식입니다.',
+    audience: '담당의사 + 전문의 1인 + 환자가족 2인 이상',
+    where: '의료기관윤리위원회 설치 의료기관',
+    pdf: 'forms/05_환자의사_확인서_환자가족_진술.pdf',
+    preview: 'forms/previews/05_환자의사_확인서_환자가족_진술_p-1.jpg'
+  },
+  {
+    id: 'form_06',
+    code: '별지 제12호',
+    name: '친권자 및 환자가족 의사 확인서',
+    desc: '환자가족 전원의 합의로 연명의료중단등결정을 하는 경우 작성하는 확인서입니다.',
+    audience: '담당의사 + 전문의 1인 + 환자가족 전원',
+    where: '의료기관윤리위원회 설치 의료기관',
+    pdf: 'forms/06_친권자_및_환자가족_의사_확인서.pdf',
+    preview: 'forms/previews/06_친권자_및_환자가족_의사_확인서_p-1.jpg'
+  },
+  {
+    id: 'form_07',
+    code: '별지 제13호',
+    name: '연명의료중단등결정 이행서',
+    desc: '담당의사가 환자에 대해 연명의료의 유보·중단을 이행한 사실을 기록하는 서식입니다. 한 번 작성하면 변경이 불가합니다.',
+    audience: '담당의사',
+    where: '의료기관윤리위원회 설치 의료기관',
+    pdf: 'forms/07_연명의료중단등결정_이행서.pdf',
+    preview: 'forms/previews/07_연명의료중단등결정_이행서_p-1.jpg'
+  }
 ];
 
 // ════════════════════════════════════════
@@ -758,7 +896,7 @@ var FLOW = {
     '등록기관 상담자로부터 설명을 받고 이해했음을 확인한 사실 검토'
   ], tip:'사전연명의료의향서는 환자가 향후 임종과정에 있는 환자가 되었을 때를 대비해 미리 작성한 문서로, 등록기관 상담자의 설명을 듣고 이해했음을 확인하는 형식입니다. 의사표현이 가능한 환자에게는 작성 당시의 의사가 변함없는지 재확인합니다.', branchQ:'환자가 현재 의사표현이 가능합니까?', yes:'m_ad_can_express', no:'m_ad_cannot_express' },
   m_ad_can_express: { step:5, type:'result', title:'의사표현 가능 — 의향서 기반 진행', icon:'✅', summary:'환자가 직접 의향서 작성 사실 및 내용을 재확인하였으므로, 환자의 의사에 따라 연명의료 유보/중단을 이행할 수 있습니다.', steps:['환자에게 의향서 작성 사실과 호스피스 이용 의향 등 기재 내용을 설명','변경 의사 여부 확인','변경 없음 확인 시 → 의향서를 환자 의사로 인정하여 이행 절차 진행','변경 원할 시 → 연명의료계획서를 새로 작성 (의향서보다 계획서가 우선)','연명의료중단등 결정 이행서 작성','이행 내용을 의료기관윤리위원회에 보고 및 국립연명의료관리기관에 등록'], docs:['임종과정에 있는 환자 판단서','연명의료중단등 결정 이행서'], maintain:['통증 완화 의료행위','영양분 공급','물 공급','산소의 단순 공급'], warn:'이행서 작성 주의사항 (반드시 확인)' },
-  m_ad_cannot_express: { step:5, type:'result', title:'의사표현 불가 — 의향서 기반 진행', icon:'✅', summary:'의사표현을 할 수 없는 상태이나, 사전연명의료의향서가 등록되어 있으므로 해당 문서에 따라 이행합니다.', steps:['의향서가 본인에 의해 작성되었는지 확인 (등록기관, 상담자, 작성일자)','의향서에 기재된 호스피스 이용 의향 확인','담당의사가 의향서 확인 사실을 기록','연명의료중단등 결정 이행서 작성','이행 내용을 의료기관윤리위원회에 보고 및 국립연명의료관리기관에 등록'], docs:['임종과정에 있는 환자 판단서','연명의료중단등 결정 이행서'], maintain:['통증 완화 의료행위','영양분 공급','물 공급','산소의 단순 공급'], warn:'이행서 작성 주의사항 (반드시 확인)' },
+  m_ad_cannot_express: { step:5, type:'result', title:'의사표현 불가 — 의향서 기반 진행', icon:'✅', summary:'의사표현을 할 수 없는 상태이나, 사전연명의료의향서가 등록되어 있으므로 담당의사와 해당 분야 전문의 1인이 별지 제10호서식 「연명의료중단등결정에 대한 환자의사 확인서(사전연명의료의향서)」를 작성하여 환자의 의사를 확인합니다.', steps:['의향서가 본인에 의해 작성되었는지 확인 (등록기관, 상담자, 작성일자)','의향서에 기재된 호스피스 이용 의향 확인','담당의사 + 해당 분야 전문의 1인이 별지 제10호서식 「환자의사 확인서(사전연명의료의향서)」 작성','확인서를 통해 의향서를 환자의 의사로 공식 인정','연명의료중단등 결정 이행서 작성','이행 내용을 의료기관윤리위원회에 보고 및 국립연명의료관리기관에 등록'], docs:['환자의사 확인서(사전연명의료의향서) - 별지 제10호','임종과정에 있는 환자 판단서','연명의료중단등 결정 이행서'], maintain:['통증 완화 의료행위','영양분 공급','물 공급','산소의 단순 공급'], note:'※ 별지 제10호서식은 의사표현이 불가능한 환자에 대해 사전연명의료의향서의 효력을 의료적으로 확인하는 서식입니다. 담당의사 + 전문의 1인의 서명이 필수입니다.', warn:'이행서 작성 주의사항 (반드시 확인)' },
   m_has_polst: { step:4, type:'result', title:'연명의료계획서 기반 진행', icon:'✅', summary:'환자가 담당의사와 함께 작성한 연명의료계획서가 있으므로, 해당 계획서에 따라 연명의료 유보/중단을 이행합니다.', steps:['연명의료계획서 내용(시행/유보/중단 결정, 호스피스 의향) 확인','환자가 의사표현 가능할 경우 변경 의사 확인','계획서에 따라 연명의료중단등 결정 이행서 작성','이행 내용을 의료기관윤리위원회에 보고','국립연명의료관리기관에 등록'], docs:['임종과정에 있는 환자 판단서','연명의료중단등 결정 이행서'], maintain:['통증 완화 의료행위','영양분 공급','물 공급','산소의 단순 공급'], note:'※ 연명의료계획서는 사전연명의료의향서보다 우선합니다.', warn:'이행서 작성 주의사항 (반드시 확인)' },
   m_no_docs: { step:4, type:'question', question:'환자가 현재 의사표현이 가능합니까?', desc:'환자 본인이 연명의료에 대한 의사를 직접 표현할 수 있는 상태인지 판단합니다.', options:[
     { label:'예, 가능합니다', value:'m_can_express', icon:'💬', sub:'환자가 직접 의사를 밝힐 수 있음' },
@@ -848,7 +986,7 @@ function switchTab(tab) {
 
 // ───── Tabs ─────
 function renderTabs() {
-  var tabs = { workflow: '맞춤 가이드', docs: '서류 체크리스트', terms: '용어 사전', faq: '자주 묻는 질문' };
+  var tabs = { workflow: '맞춤 가이드', docs: '서류 체크리스트', forms: '서식 자료실', terms: '용어 사전', faq: 'FAQ' };
   if (state.role === 'medical') tabs.workflow = '워크플로우';
   var color = ROLES[state.role].color;
   var html = '';
@@ -866,8 +1004,78 @@ function renderContent() {
   if (state.tab === 'guide') el.innerHTML = renderGuide();
   else if (state.tab === 'workflow') el.innerHTML = renderWorkflow();
   else if (state.tab === 'docs') el.innerHTML = renderDocs();
+  else if (state.tab === 'forms') el.innerHTML = renderForms();
   else if (state.tab === 'terms') el.innerHTML = renderTerms();
   else if (state.tab === 'faq') el.innerHTML = renderFaq();
+}
+
+// ───── Forms Tab ─────
+function renderForms() {
+  var html = '<div style="margin-bottom:14px;padding:12px 14px;background:var(--p-light);border-radius:10px;font-size:12.5px;color:var(--p);line-height:1.6;font-weight:600">';
+  html += '📋 보건복지부 시행규칙에 따른 7종 법정 서식입니다. 카드를 누르면 미리보기가 열리고 PDF 다운로드도 가능합니다.';
+  html += '</div>';
+  for (var i = 0; i < FORMS.length; i++) {
+    var f = FORMS[i];
+    html += '<div class="form-card">';
+    html += '<div class="form-card-header" data-form="' + f.id + '">';
+    html += '<span class="form-code-badge">' + esc(f.code) + '</span>';
+    html += '<div class="form-card-body">';
+    html += '<div class="form-card-name">' + esc(f.name) + '</div>';
+    html += '<div class="form-card-desc">' + esc(f.audience) + '</div>';
+    html += '</div>';
+    html += '<span class="form-card-arrow">›</span>';
+    html += '</div></div>';
+  }
+  return html;
+}
+
+function openFormModal(formId) {
+  var f = null;
+  for (var i = 0; i < FORMS.length; i++) {
+    if (FORMS[i].id === formId) { f = FORMS[i]; break; }
+  }
+  if (!f) return;
+  document.getElementById('form-modal-title').textContent = f.name + ' (' + f.code + ')';
+  var body = '';
+  body += '<div class="form-info">';
+  body += '<div style="margin-bottom:6px"><b>설명</b> · ' + esc(f.desc) + '</div>';
+  body += '<div style="margin-bottom:6px"><b>작성 대상</b> · ' + esc(f.audience) + '</div>';
+  body += '<div><b>작성 장소</b> · ' + esc(f.where) + '</div>';
+  body += '</div>';
+  body += '<div class="form-preview-wrap">';
+  body += '<img class="form-preview-img" src="' + f.preview + '" alt="' + esc(f.name) + ' 미리보기" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'block\'">';
+  body += '<div style="display:none;padding:40px 20px;color:var(--text-sub);font-size:13px">미리보기 이미지를 불러올 수 없습니다.<br>아래 PDF 다운로드 버튼을 이용해 주세요.</div>';
+  body += '<div class="form-preview-note">※ 1쪽 미리보기입니다. 전체 내용은 PDF 다운로드로 확인하세요.</div>';
+  body += '</div>';
+  body += '<div class="form-actions">';
+  body += '<a href="' + f.pdf + '" target="_blank" class="form-action-view">👁️ 새 창에서 열기</a>';
+  body += '<a href="' + f.pdf + '" download class="form-action-pdf">📥 PDF 다운로드</a>';
+  body += '</div>';
+  document.getElementById('form-modal-body').innerHTML = body;
+  document.getElementById('form-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeFormModal() {
+  document.getElementById('form-modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// 첫 화면의 "서식 자료실" 버튼 → 서식 탭만 보여주는 진입
+function openFormsLibrary() {
+  state.role = 'forms_only';
+  state.tab = 'forms';
+  document.getElementById('role-screen').classList.remove('active');
+  document.getElementById('main-screen').classList.add('active');
+
+  var icon = document.getElementById('header-icon');
+  icon.textContent = '📄';
+  icon.style.background = '#EDE9FE';
+  document.getElementById('header-title').textContent = '서식 자료실';
+
+  // forms_only 모드에서는 탭바를 숨김
+  document.getElementById('tabs-bar').innerHTML = '';
+  document.getElementById('main-content').innerHTML = renderForms();
 }
 
 // ───── Guide Tab (only for family) ─────
@@ -1197,6 +1405,25 @@ document.addEventListener('click', function(e) {
 
   var roleBtn = t.closest('.role-btn');
   if (roleBtn) { selectRole(roleBtn.getAttribute('data-role')); return; }
+
+  // Forms shortcut on landing screen
+  if (t.id === 'forms-shortcut-btn' || t.closest('#forms-shortcut-btn')) {
+    openFormsLibrary();
+    return;
+  }
+
+  // Form card click → open modal
+  var formCardItem = t.closest('[data-form]');
+  if (formCardItem) {
+    openFormModal(formCardItem.getAttribute('data-form'));
+    return;
+  }
+
+  // Modal close
+  if (t.id === 'form-modal-close' || t.id === 'form-modal') {
+    closeFormModal();
+    return;
+  }
 
   if (t.id === 'header-back-btn' || t.closest('#header-back-btn')) { goHome(); return; }
 
