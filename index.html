@@ -198,11 +198,13 @@
   .docs-block { border-radius: 14px; padding: 14px 16px; margin-bottom: 10px; border: 1px solid; }
   .docs-block-check { background: #EFF6FF; border-color: #BFDBFE; }
   .docs-block-create { background: #F5F3FF; border-color: #DDD6FE; }
+  .docs-block-future { background: #FFFBEB; border-color: #FDE68A; }
   .docs-block-other { background: #F8FAFC; border-color: var(--border); }
   .docs-block-header { margin-bottom: 10px; }
   .docs-block-title { font-size: 13.5px; font-weight: 800; }
   .docs-block-check .docs-block-title { color: var(--blue); }
   .docs-block-create .docs-block-title { color: var(--p); }
+  .docs-block-future .docs-block-title { color: var(--yellow-text); }
   .docs-block-other .docs-block-title { color: var(--text); }
   .docs-block-sub { font-size: 11.5px; color: var(--text-sub); margin-top: 2px; }
   .docs-block-list { display: flex; flex-direction: column; gap: 6px; }
@@ -210,6 +212,7 @@
   .doc-row:active { transform: scale(0.99); }
   .docs-block-check .doc-row:active { background: #DBEAFE; }
   .docs-block-create .doc-row:active { background: var(--p-light); }
+  .docs-block-future .doc-row:active { background: #FEF3C7; }
   .doc-row-static { cursor: default; }
   .doc-row-icon { flex-shrink: 0; width: 22px; text-align: center; font-size: 14px; }
   .doc-row-name { flex: 1; font-weight: 600; line-height: 1.4; }
@@ -928,22 +931,81 @@ var FLOW = {
   ],
   nextLabel:'처음으로 돌아가기', nextNode:'m_start' },
   m_dying: { step:2, type:'confirm', title:'임종과정 판단 확인', icon:'📌', checklist:['회생 가능성이 없음을 확인','치료에도 불구하고 회복되지 않음을 확인','급속도로 증상이 악화되어 사망에 임박한 상태','담당의사 본인이 판단','해당 분야 전문의 1인의 판단 확인'], note:'※ 호스피스전문기관에서 호스피스를 이용 중인 말기환자의 경우, 담당의사 1인의 판단으로 갈음 가능', req:'의료기관윤리위원회 설치 의료기관에서만 이행 가능', next:'m_check_docs' },
-  m_terminal: { step:2, type:'confirm', title:'말기환자 진단 확인', icon:'📌', checklist:['적극적 치료에도 근원적 회복 가능성 없음 확인','증상이 점차 악화됨을 확인','수개월 이내 사망할 것으로 예상','담당의사 및 전문의 1인의 진단'], note:'※ 말기환자 대상 질환: 암, 후천성면역결핍증, 만성폐쇄성호흡기질환, 만성간경화 등', req:'말기 단계에서는 연명의료의 유보·중단 결정 및 이행 절차를 진행할 수 없으며, 임종과정 진입 시를 대비한 사전 준비만 가능합니다', next:'m_terminal_prep' },
+  m_terminal: { step:2, type:'confirm', title:'말기환자 진단 확인', icon:'📌', checklist:['적극적 치료에도 근원적 회복 가능성 없음 확인','증상이 점차 악화됨을 확인','수개월 이내 사망할 것으로 예상','담당의사 및 전문의 1인의 진단'], note:'※ 말기환자 대상 질환: 암, 후천성면역결핍증, 만성폐쇄성호흡기질환, 만성간경화 등', req:'말기 단계에서는 연명의료의 유보·중단 결정 및 이행 절차를 진행할 수 없습니다. 환자 의사 확인을 위한 별지 제10/11/12호서식 작성 및 임종과정 환자 판단서(별지 제9호), 이행서(별지 제13호) 작성은 임종과정 진입 이후에만 가능합니다.', next:'m_terminal_prep' },
 
   // ── 말기환자 단계: 사전 준비만 가능 (이행 불가) ──
-  m_terminal_prep: { step:3, type:'info', title:'말기환자 단계에서 가능한 절차', icon:'📋', blocks:[
-    { heading:'⚠ 말기 단계에서는 연명의료의 유보·중단 결정 및 이행이 불가합니다', text:'연명의료의 유보·중단 결정과 그 이행 절차는 환자가 "임종과정에 있는 환자"로 판정된 이후에만 가능합니다. 말기 단계에서는 임종과정에 들어갈 때를 대비한 사전 준비만 가능하며, 임종과정 환자 판단서 및 연명의료중단등 결정 이행서는 이 단계에서 작성할 수 없습니다.', tags:['유보·중단 결정 불가','사전 준비만 가능'] },
-    { heading:'1. 연명의료계획서 작성 권유', text:'말기환자는 담당의사가 환자의 의사에 따라 연명의료계획서를 작성할 수 있습니다. 환자가 의사표현이 가능한 시점에 계획서를 작성해 두면, 추후 임종과정에 들어갔을 때 이를 근거로 신속하게 절차를 진행할 수 있습니다.', tags:['연명의료계획서 작성 가능','담당의사가 작성'] },
-    { heading:'2. 사전연명의료의향서 등록 여부 확인', text:'환자가 과거에 사전연명의료의향서를 작성하였는지 연명의료정보처리시스템에서 미리 조회해 두는 것이 좋습니다. 등록되어 있다면 임종과정 진입 시 별도 가족 진술 없이도 환자의 의사로 인정됩니다.', tags:['시스템 사전 조회'] },
-    { heading:'💡 의향서가 있어도 계획서 추가 작성을 권유할 수 있습니다', text:'환자가 사전연명의료의향서를 이미 작성한 경우라도, 연명의료계획서를 추가로 작성하면 임종과정 진입 시 신속한 이행이 가능합니다. 의향서만 있는 경우에는 환자가 의사표현 불가 상태에서 임종과정에 진입하면 별지 제10호서식 「환자의사 확인서(사전연명의료의향서)」를 담당의사 + 전문의 1인이 별도로 작성해야 하지만, 계획서가 있으면 이 절차가 생략됩니다. 계획서를 새로 작성하면 기존 의향서는 효력을 잃으며 계획서가 우선합니다.', tags:['신속한 이행','별지 제10호 작성 생략'] },
-    { heading:'3. 호스피스·완화의료 안내', text:'말기 단계의 환자에게는 호스피스·완화의료 이용을 안내할 수 있습니다. 입원형, 자문형, 가정형 호스피스 등 환자와 가족의 상황에 맞는 형태를 선택할 수 있습니다.', tags:['호스피스 이용 가능'] },
-    { heading:'4. 가족과의 사전 상담', text:'환자가 의사표현이 가능한 동안 가족과 함께 연명의료에 대한 뜻을 충분히 나누도록 안내합니다. 향후 임종과정 진입 시 가족 진술이나 합의가 필요할 수 있으므로, 미리 의사소통이 되어 있는 것이 중요합니다.', tags:['가족 사전 상담'] }
-  ],
-  relatedForms: [
-    { name: '연명의료계획서 (별지 제1호)', form: 'form_02', action: 'create' },
-    { name: '사전연명의료의향서 (별지 제6호)', form: 'form_01', action: 'check' }
-  ],
-  nextLabel:'처음으로 돌아가기', nextNode:'m_start' },
+  // 시작: 의향서 등록 여부 확인
+  m_terminal_prep: { step:3, type:'question', question:'환자의 사전연명의료의향서가 있는지 확인하셨나요?', desc:'연명의료정보처리시스템(www.lst.go.kr)에서 환자의 사전연명의료의향서 등록 여부를 조회합니다. 말기 단계에서는 연명의료의 유보·중단 결정 및 이행이 불가하므로, 임종과정 진입 시를 대비한 사전 준비 절차를 안내합니다.', options:[
+    { label:'사전연명의료의향서가 등록되어 있음', value:'m_t_ad_yes', icon:'📄', sub:'환자가 미리 작성해 둔 의향서 확인됨' },
+    { label:'등록된 의향서 없음', value:'m_t_ad_no', icon:'❌', sub:'또는 시스템 조회 결과 없음' }
+  ]},
+
+  // 의향서 있음 → 환자 의사표현 가능 여부
+  m_t_ad_yes: { step:4, type:'question', question:'환자가 현재 의사표현이 가능한 상태입니까?', desc:'환자가 의식이 명료하고 자신의 의사를 직접 표현할 수 있는지 판단합니다.', options:[
+    { label:'예, 의사표현이 가능합니다', value:'m_t_ad_yes_express', icon:'💬', sub:'환자가 직접 의사를 밝힐 수 있음' },
+    { label:'아니요, 의사표현이 불가능합니다', value:'m_t_ad_yes_noexpress', icon:'🚫', sub:'의식 없음 또는 표현 불가' }
+  ]},
+
+  // 의향서 있음 + 의사표현 가능
+  m_t_ad_yes_express: { step:5, type:'info', title:'의향서 있음 + 의사표현 가능 — 사전 준비 안내', icon:'✅', blocks:[
+    { heading:'⚠ 아직 이행 단계가 아닙니다', text:'환자가 임종과정에 있는 환자로 판정되기 전까지는 연명의료의 유보·중단 결정 및 이행 절차를 진행할 수 없습니다. 이 단계에서는 임종과정 진입을 대비한 사전 준비만 가능합니다.', tags:['결정·이행 불가','사전 준비'] },
+    { heading:'1. 의향서 내용 재확인 권유', text:'환자에게 이전에 작성한 사전연명의료의향서의 내용(호스피스 이용 의향, 사망 전 열람허용 여부 등)을 다시 한 번 확인하고, 현재 의사와 일치하는지 점검하도록 안내하세요. 의사가 바뀌었다면 등록기관을 방문하여 의향서를 변경하거나 철회할 수 있습니다.', tags:['의향서 재확인','변경/철회 가능'] },
+    { heading:'2. 연명의료계획서 작성 권장 (강력 권장)', text:'환자가 의사표현이 가능한 지금이 연명의료계획서 작성에 가장 적합한 시점입니다. 담당의사가 환자와 상의하여 계획서를 작성하면, 임종과정 진입 시 별지 제10호서식 작성 절차가 생략되어 신속한 이행이 가능합니다. 새 계획서가 작성되면 기존 의향서는 효력을 잃고 계획서가 우선합니다.', tags:['계획서 작성 권장','담당의사가 작성'] },
+    { heading:'3. 호스피스·완화의료 안내', text:'말기 단계의 환자에게는 호스피스·완화의료 이용을 안내할 수 있습니다. 입원형, 자문형, 가정형 호스피스 등 환자와 가족의 상황에 맞는 형태를 선택할 수 있습니다.', tags:['호스피스 이용 가능'] }
+  ], relatedForms: [
+    { name: '사전연명의료의향서 (별지 제6호)', form: 'form_01', action: 'check' },
+    { name: '연명의료계획서 (별지 제1호) - 작성 권장', form: 'form_02', action: 'create' },
+    { name: '임종과정에 있는 환자 판단서 (별지 제9호)', form: 'form_03', action: 'future' },
+    { name: '연명의료중단등 결정 이행서 (별지 제13호)', form: 'form_07', action: 'future' }
+  ], nextLabel:'처음으로 돌아가기', nextNode:'m_start' },
+
+  // 의향서 있음 + 의사표현 불가
+  m_t_ad_yes_noexpress: { step:5, type:'info', title:'의향서 있음 + 의사표현 불가 — 사전 준비 안내', icon:'📄', blocks:[
+    { heading:'⚠ 이 단계에서는 환자 의사 확인 서식을 작성할 수 없습니다', text:'환자가 의사표현 불가 상태이므로 연명의료계획서(별지 제1호) 작성은 불가능합니다. 또한 별지 제10호서식 「환자의사 확인서(사전연명의료의향서)」는 환자가 임종과정에 있는 환자로 판정된 이후에야 작성할 수 있는 서식이므로, 말기 단계인 지금은 작성할 수 없습니다. 이 단계에서는 임종과정 진입 시를 대비한 사전 준비만 가능합니다.', tags:['지금 작성 가능한 서식 없음','사전 준비'] },
+    { heading:'1. 의향서 본인 작성 확인', text:'의향서가 본인에 의해 자발적으로 작성되었는지(등록기관, 상담자, 작성일자)를 연명의료 정보처리시스템에서 미리 조회해 두세요. 정보처리시스템을 통해 조회한 의향서는 적법하게 작성된 것으로 간주됩니다.', tags:['본인 작성 여부 확인','적법성 확인'] },
+    { heading:'2. 임종과정 진입 시 필요 절차 안내', text:'환자가 임종과정에 있는 환자로 판정되면, 담당의사 + 해당 분야 전문의 1인이 ① 환자가 의향서 내용을 확인하기에 충분한 의사능력이 없다는 의학적 판단, ② 의향서가 적법하게 작성되었다는 사실을 함께 확인하여 별지 제10호서식 「환자의사 확인서(사전연명의료의향서)」를 작성합니다. 함께 판단할 전문의를 미리 정해 두면 좋습니다.', tags:['별지 제10호 작성 예정','전문의 1인 협력'] },
+    { heading:'3. 가족에게 절차 안내', text:'가족에게 환자의 의향서가 등록되어 있어 가족 진술이나 합의 없이도 환자 본인의 뜻에 따라 진행됨을 안내합니다. 환자가 받는 통증 완화, 영양·수분 공급, 산소 공급 등 기본 돌봄은 절대 중단되지 않음을 함께 설명하세요.', tags:['가족 안심 안내'] },
+    { heading:'4. 호스피스·완화의료 검토', text:'환자의 상태에 따라 호스피스·완화의료 이용을 가족과 상의하세요. 의향서에 호스피스 이용 의향이 기재되어 있다면 그에 따라 진행합니다.', tags:['호스피스 검토'] }
+  ], relatedForms: [
+    { name: '사전연명의료의향서 (별지 제6호)', form: 'form_01', action: 'check' },
+    { name: '환자의사 확인서 - 사전연명의료의향서 (별지 제10호)', form: 'form_04', action: 'future' },
+    { name: '임종과정에 있는 환자 판단서 (별지 제9호)', form: 'form_03', action: 'future' },
+    { name: '연명의료중단등 결정 이행서 (별지 제13호)', form: 'form_07', action: 'future' }
+  ], nextLabel:'처음으로 돌아가기', nextNode:'m_start' },
+
+  // 의향서 없음 → 환자 의사표현 가능 여부
+  m_t_ad_no: { step:4, type:'question', question:'환자가 현재 의사표현이 가능한 상태입니까?', desc:'환자가 의식이 명료하고 자신의 의사를 직접 표현할 수 있는지 판단합니다.', options:[
+    { label:'예, 의사표현이 가능합니다', value:'m_t_noad_express', icon:'💬', sub:'환자가 직접 의사를 밝힐 수 있음 (가장 권장되는 상황)' },
+    { label:'아니요, 의사표현이 불가능합니다', value:'m_t_noad_noexpress', icon:'🚫', sub:'의식 없음 또는 표현 불가' }
+  ]},
+
+  // 의향서 없음 + 의사표현 가능 → 계획서 작성 강력 권유
+  m_t_noad_express: { step:5, type:'info', title:'의향서 없음 + 의사표현 가능 — 연명의료계획서 작성 권유', icon:'📝', blocks:[
+    { heading:'⚠ 아직 이행 단계가 아닙니다', text:'환자가 임종과정에 있는 환자로 판정되기 전까지는 연명의료의 유보·중단 결정 및 이행 절차를 진행할 수 없습니다. 그러나 환자가 의사표현이 가능한 지금이 연명의료계획서 작성에 가장 적합한 시점입니다.', tags:['결정·이행 불가','계획서 작성 적기'] },
+    { heading:'1. 연명의료계획서 작성 권유 (강력 권장)', text:'담당의사가 환자에게 연명의료결정제도와 계획서의 의미·효력을 충분히 설명한 후, 환자의 서명·기명날인·녹취·녹화 중 한 가지 방식으로 의사를 확인하고 연명의료계획서를 작성합니다. 미리 작성해 두면 추후 임종과정 진입 시 환자의사 확인 절차(별지 제10/11/12호)가 생략되어 신속한 이행이 가능합니다.', tags:['담당의사가 작성','환자는 의사 확인 표시'] },
+    { heading:'2. 설명 사항 (반드시 모두 설명)', text:'담당의사 설명사항 6가지: ① 환자의 질병 상태와 치료방법, ② 연명의료의 시행방법 및 연명의료중단등결정, ③ 호스피스의 선택 및 이용, ④ 계획서의 작성·등록·보관 및 통보, ⑤ 계획서의 변경·철회 및 그에 따른 조치, ⑥ 의료기관윤리위원회의 이용에 관한 사항.', tags:['설명사항 6가지'] },
+    { heading:'3. 호스피스 이용 의향 확인', text:'환자에게 호스피스·완화의료 이용 의향을 함께 확인하여 계획서에 기재합니다. 입원형, 자문형, 가정형 호스피스 등 환자와 가족의 상황에 맞는 형태를 안내합니다.', tags:['호스피스 의향 확인'] },
+    { heading:'4. 가족과의 사전 상담 권장', text:'환자가 의사표현 가능한 지금, 가족과 함께 연명의료에 대한 뜻을 충분히 나누도록 안내합니다. 향후 변경·철회 가능성도 함께 설명하여 환자의 자기결정권을 보장합니다.', tags:['가족 사전 상담'] }
+  ], relatedForms: [
+    { name: '연명의료계획서 (별지 제1호) - 작성 권장', form: 'form_02', action: 'create' },
+    { name: '임종과정에 있는 환자 판단서 (별지 제9호)', form: 'form_03', action: 'future' },
+    { name: '연명의료중단등 결정 이행서 (별지 제13호)', form: 'form_07', action: 'future' }
+  ], nextLabel:'처음으로 돌아가기', nextNode:'m_start' },
+
+  // 의향서 없음 + 의사표현 불가 → 가족 사전 상담 필요
+  m_t_noad_noexpress: { step:5, type:'info', title:'의향서 없음 + 의사표현 불가 — 가족 사전 상담', icon:'👨‍👩‍👧', blocks:[
+    { heading:'⚠ 이 단계에서는 작성 가능한 서식이 없습니다', text:'환자가 사전 문서도 없고 의사표현도 불가능한 상태입니다. 연명의료계획서(별지 제1호)는 환자의 의사 확인이 전제이므로 작성할 수 없으며, 환자가족 진술서(별지 제11호)나 친권자 및 환자가족 의사 확인서(별지 제12호)는 환자가 임종과정에 있는 환자로 판정된 이후에야 작성할 수 있는 서식입니다. 따라서 말기 단계인 지금은 가족과의 충분한 사전 상담이 가장 중요한 준비 작업입니다.', tags:['지금 작성 가능한 서식 없음','가족 상담이 핵심'] },
+    { heading:'1. 임종과정 진입 시 절차 안내', text:'환자가 임종과정에 있는 환자로 판정되면, 다음 두 가지 방법 중 하나로 환자의 의사를 확인합니다: ① 환자가족 2인 이상이 환자의 평소 연명의료 의사를 동일하게 진술하여 별지 제11호서식을 작성하거나, ② 환자가족 전원이 합의하여 별지 제12호서식을 작성합니다. 어느 쪽이든 담당의사 + 해당 분야 전문의 1인의 확인이 필요합니다.', tags:['가족 2인 진술 또는 전원 합의'] },
+    { heading:'2. 가족 범위 확인 (중요)', text:'환자가족: 19세 이상의 ①배우자, ②1촌 직계존비속, ③2촌 존비속(①②가 없는 경우), ④형제자매(①②③이 없는 경우). 행방불명·실종선고·의식불명자는 가족에서 제외됩니다. 가족 범위와 연락 가능 여부를 미리 파악해 두세요.', tags:['가족 범위 파악'] },
+    { heading:'3. 가족에게 환자의 평소 뜻 확인', text:'가족에게 환자가 평소 연명의료에 대해 어떤 뜻을 보였는지 차분히 확인합니다. 평소 환자가 자주 한 말, 종교적·철학적 신념 등 작은 단서도 도움이 됩니다. 가능하면 가족 2인 이상이 동일한 진술을 할 수 있는지 점검하세요. 다른 가족의 반대 진술이나 객관적 증거가 있으면 별지 제11호 작성이 불가하므로 사전에 가족 간 의견을 충분히 나누도록 안내하세요.', tags:['평소 환자 의사 확인','가족 간 의견 정리'] },
+    { heading:'4. 호스피스·완화의료 가족 상의', text:'환자의 임종이 가까워질 가능성을 고려하여, 가족과 호스피스·완화의료 이용에 대해 미리 상의합니다. 기본 돌봄(통증 완화, 영양·수분, 산소 공급)은 절대 중단되지 않음을 함께 설명합니다.', tags:['호스피스 상의'] }
+  ], relatedForms: [
+    { name: '환자의사 확인서 - 환자가족 진술 (별지 제11호)', form: 'form_05', action: 'future' },
+    { name: '친권자 및 환자가족 의사 확인서 (별지 제12호)', form: 'form_06', action: 'future' },
+    { name: '임종과정에 있는 환자 판단서 (별지 제9호)', form: 'form_03', action: 'future' },
+    { name: '연명의료중단등 결정 이행서 (별지 제13호)', form: 'form_07', action: 'future' }
+  ], nextLabel:'처음으로 돌아가기', nextNode:'m_start' },
+
 
   m_check_docs: { step:3, type:'question', question:'환자의 사전 문서를 확인하세요.', desc:'연명의료정보처리시스템(www.lst.go.kr)에서 조회합니다. 임종과정 환자에 대한 연명의료 유보/중단 이행 절차로 진행됩니다.', options:[
     { label:'사전연명의료의향서 있음', value:'m_has_ad', icon:'📄', sub:'환자가 미리 작성해 둔 의향서 확인' },
@@ -1039,7 +1101,11 @@ var CRUMB_LABELS = {
   f_choose_method:'방법 선택', f_method_2:'2인 진술', f_method_all:'전원 합의',
   f_result_ad:'의향서 결과', f_result_polst:'계획서 결과', f_result_method_2:'2인 진술 결과', f_result_method_all:'전원 합의 결과',
   // 의료진
-  m_start:'환자 상태', m_dying:'임종과정', m_terminal:'말기', m_terminal_prep:'말기 사전준비', m_none:'해당없음', m_check_docs:'문서확인',
+  m_start:'환자 상태', m_dying:'임종과정', m_terminal:'말기', m_terminal_prep:'말기 사전준비',
+  m_t_ad_yes:'의향서 있음', m_t_ad_no:'의향서 없음',
+  m_t_ad_yes_express:'의향서+표현가능', m_t_ad_yes_noexpress:'의향서+표현불가',
+  m_t_noad_express:'문서없음+표현가능', m_t_noad_noexpress:'문서없음+표현불가',
+  m_none:'해당없음', m_check_docs:'문서확인',
   m_has_ad:'의향서 있음', m_has_polst:'계획서 있음', m_no_docs:'문서없음',
   m_can_express:'표현가능', m_cannot_express:'표현불가',
   m_ad_can_express:'표현가능+의향서', m_ad_cannot_express:'표현불가+의향서',
@@ -1452,26 +1518,32 @@ function renderWfResult(node) {
 }
 
 // 서류 블록 렌더링 — node.docs는 객체 배열 [{name, form, action}] 또는 문자열 배열(레거시)
-// action: 'check' = 작성되어 있는지 확인 / 'create' = 직접 작성해야 함 / 'verify' = 가족관계 등 비서식 확인 항목
+// action: 'check' = 작성되어 있는지 확인 / 'create' = 직접 작성해야 함 / 'future' = 임종과정 진입 시 작성 예정 / 'verify' = 가족관계 등 비서식 확인 항목
 function renderDocsBlock(docs) {
   if (!docs || !docs.length) return '';
-  var checks = [], creates = [], others = [];
+  var checks = [], creates = [], futures = [], others = [];
   for (var i = 0; i < docs.length; i++) {
     var d = docs[i];
     if (typeof d === 'string') { creates.push({ name: d }); continue; }
     if (d.action === 'check') checks.push(d);
     else if (d.action === 'create') creates.push(d);
+    else if (d.action === 'future') futures.push(d);
     else others.push(d);
   }
   var html = '';
   if (checks.length) html += renderDocCard('🔍 확인할 서류', '환자가 이미 작성·등록되어 있는지 확인합니다', checks, 'check');
-  if (creates.length) html += renderDocCard('✍️ 작성할 서류', '이 단계에서 새로 작성·서명해야 하는 서식입니다', creates, 'create');
+  if (creates.length) html += renderDocCard('✍️ 지금 작성 가능한 서식', '이 단계에서 작성·서명할 수 있는 서식입니다', creates, 'create');
+  if (futures.length) html += renderDocCard('📅 임종과정 진입 시 작성 예정 서식', '말기 단계에서는 작성할 수 없으며, 환자가 임종과정에 있는 환자로 판정된 후에 작성합니다 (미리보기만 가능)', futures, 'future');
   if (others.length) html += renderDocCard('📋 그 외 필요 항목', '서식 외 준비물입니다', others, 'verify');
   return html;
 }
 
 function renderDocCard(title, subtitle, items, action) {
-  var html = '<div class="docs-block ' + (action === 'check' ? 'docs-block-check' : action === 'create' ? 'docs-block-create' : 'docs-block-other') + '">';
+  var blockCls = action === 'check' ? 'docs-block-check'
+               : action === 'create' ? 'docs-block-create'
+               : action === 'future' ? 'docs-block-future'
+               : 'docs-block-other';
+  var html = '<div class="docs-block ' + blockCls + '">';
   html += '<div class="docs-block-header">';
   html += '<div class="docs-block-title">' + title + '</div>';
   html += '<div class="docs-block-sub">' + esc(subtitle) + '</div>';
@@ -1480,7 +1552,6 @@ function renderDocCard(title, subtitle, items, action) {
   for (var i = 0; i < items.length; i++) {
     var d = items[i];
     if (d.form) {
-      // 클릭 시 모달 열기
       html += '<button class="doc-row" data-form="' + d.form + '">';
       html += '<span class="doc-row-icon">📄</span>';
       html += '<span class="doc-row-name">' + esc(d.name) + '</span>';
