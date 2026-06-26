@@ -41,6 +41,7 @@
 
   .content { flex: 1; padding: 20px 18px; overflow-y: auto; }
   .footer { padding: 13px 18px; text-align: center; font-size: 12px; color: var(--text-muted); border-top: 1px solid var(--border); background: var(--card); }
+  .footer-credit { margin-top: 7px; font-size: 13px; color: var(--p); font-weight: 700; }
 
   /* Role Selector */
   #role-screen { align-items: center; justify-content: center; padding: 24px; }
@@ -55,6 +56,7 @@
   .role-btn-sub { font-size: 13px; color: var(--text-sub); }
   .role-btn-arrow { margin-left: auto; font-size: 18px; }
   .role-notice { margin-top: 32px; font-size: 11px; color: var(--text-muted); text-align: center; line-height: 1.5; max-width: 340px; }
+  .role-credit { margin-top: 20px; font-size: 13px; color: var(--p); font-weight: 700; text-align: center; letter-spacing: 0.2px; }
 
   /* Forms shortcut button on role select screen */
   .forms-shortcut { width: 100%; max-width: 380px; margin-top: 16px; padding: 14px 18px; display: flex; align-items: center; gap: 12px; background: linear-gradient(135deg, #FAFAFC, #F1F5F9); border: 1.5px dashed var(--border); border-radius: 14px; text-align: left; transition: all 0.2s; }
@@ -318,6 +320,8 @@
   </button>
 
   <p class="role-notice">※ 본 앱은 정보 제공 목적이며 법적 효력을 갖는 유권해석의 근거가 되지 않습니다.<br>구체적인 사항은 국립연명의료관리기관(www.lst.go.kr) 또는 담당 의료기관에 문의하세요.</p>
+
+  <p class="role-credit">Made by 가톨릭대학교 성빈센트병원 의료윤리사무국</p>
 </div>
 
 <div id="main-screen" class="screen">
@@ -331,7 +335,10 @@
   </div>
   <div class="tabs" id="tabs-bar"></div>
   <div class="content" id="main-content"></div>
-  <div class="footer">국립연명의료관리기관 ☎ 1855-0075 · lst.go.kr</div>
+  <div class="footer">
+    국립연명의료관리기관 ☎ 1855-0075 · lst.go.kr
+    <div class="footer-credit">Made by 가톨릭대학교 성빈센트병원 의료윤리사무국</div>
+  </div>
 </div>
 
 </div>
